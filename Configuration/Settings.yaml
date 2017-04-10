@@ -1,0 +1,12 @@
+CM:
+  Neos:
+    ThemeModule:
+      modules:
+        management:
+          submodules:
+            themeModule:
+              label: 'Theme Settings'
+              controller: 'CM\Neos\ThemeModule\Controller\BackendController'
+              description: 'Customize your Theme'
+              icon: 'icon-sliders'
+              privilegeTarget: 'CM.Neos.ThemeModule:BackendModule'

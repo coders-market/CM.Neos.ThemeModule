@@ -1,0 +1,11 @@
+privilegeTargets:
+  'Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege':
+        'CM.Neos.ThemeModule:BackendModule':
+          matcher: 'method(Vendor\Site\Controller\BackendController->.*Action())'
+
+roles:
+  'Neos.Neos:Editor':
+    privileges:
+      -
+        privilegeTarget: 'CM.Neos.ThemeModule:BackendModule'
+        permission: GRANT

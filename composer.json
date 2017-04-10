@@ -1,0 +1,19 @@
+{
+    "name": "cm/neos-thememodule",
+    "type": "neos-plugin",
+    "license": "GPL-3.0+",
+    "description": "Backend module to customize supported themes / site packages",
+    "require": {
+        "neos/neos": "~2.3.0 || ~3.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CM\\Neos\\ThemeModule\\": "Classes"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "CM.Neos.ThemeModule"
+        }
+    }
+}
