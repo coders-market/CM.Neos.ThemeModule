@@ -1,0 +1,9 @@
+CM\Neos\ThemeModule\Controller\BackendController:
+  properties:
+    cacheFrontend:
+      object:
+        factoryObjectName: Neos\Flow\Cache\CacheManager
+        factoryMethodName: getCache
+        arguments:
+          1:
+            value: CM_Neos_ThemeModule_Controller_BackendController_CacheFrontend

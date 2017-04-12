@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="CM.Neos.ThemeModule" source-language="en" datatype="plaintext">
+        <body>
+            <trans-unit id="headline">
+                <source>Theme Settings</source>
+            </trans-unit>
+            <trans-unit id="button.save">
+				<source>Save Changes</source>
+			</trans-unit>
+            <trans-unit id="select.font.label">
+                <source>Select your font</source>
+            </trans-unit>
+            <trans-unit id="select.font.prependOptionLabel">
+                <source>Theme default selected</source>
+            </trans-unit>
+            <trans-unit id="textarea.scss.label">
+                <source>Your custom scss code to append: (Press Ctrl+Space for code completion)</source>
+            </trans-unit>
+            <trans-unit id="textarea.css.label">
+                <source>Your custom css code to append: (Press Ctrl+Space for code completion)</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

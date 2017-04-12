@@ -1,5 +1,83 @@
 {namespace neos=Neos\Neos\ViewHelpers}
 <div class="neos-content neos-container-fluid">
-	<h1></h1>
-	<p>{exampleValue}</p>
+
+	<link rel="stylesheet" href="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/lib/codemirror.css')}" type="text/css" />
+	<link rel="stylesheet" href="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/lint/lint.css')}" type="text/css" />
+	<link rel="stylesheet" href="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/fold/foldgutter.css')}" type="text/css" />
+	<link rel="stylesheet" href="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/hint/show-hint.css')}" type="text/css" />
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/lib/codemirror.js')}"></script>
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/fold/foldcode.js')}"></script>
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/fold/foldgutter.js')}"></script>
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/fold/brace-fold.js')}"></script>
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/fold/comment-fold.js')}"></script>
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/fold/indent-fold.js')}"></script>
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/lint/lint.js')}"></script>
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/lint/css-lint.js')}"></script>
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/edit/trailingspace.js')}"></script>
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/edit/closebrackets.js')}"></script>
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/edit/matchbrackets.js')}"></script>
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/hint/show-hint.js')}"></script>
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/hint/css-hint.js')}"></script>
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror-scss-linter/scsslint.js')}"></script>
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror-scss-linter/scss-lint.js')}"></script>
+	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/mode/css/css.js')}"></script>
+
+	<h1>{neos:backend.translate(id: 'headline', package: 'CM.Neos.ThemeModule')}</h1>
+	<br />
+	<f:form action="update" method="post" class="neos-button-primary" object="{settings}" name="settings">
+
+		<label for="font-family">{neos:backend.translate(id: 'select.font.label', package: 'CM.Neos.ThemeModule')}</label>
+		<f:form.select property="customFont" id="font-family" options="{fonts}" prependOptionLabel="{neos:backend.translate(id: 'select.font.prependOptionLabel', package: 'CM.Neos.ThemeModule')}" />
+
+		<label for="code-scss">{neos:backend.translate(id: 'textarea.scss.label', package: 'CM.Neos.ThemeModule')}</label>
+		<f:form.textarea property="customScss" id="code-scss" rows="10" cols="70"/><br />
+		<label for="code-scss">{neos:backend.translate(id: 'textarea.css.label', package: 'CM.Neos.ThemeModule')}</label>
+		<f:form.textarea property="customCss" id="code-css" rows="10" cols="70" /><br />
+		<br />
+		<button type="submit" title="{neos:backend.translate(id: 'button.save', package: 'CM.Neos.ThemeModule')}" data-neos-toggle="tooltip"><i class="icon-refresh"></i> {neos:backend.translate(id: 'button.save', package: 'CM.Neos.ThemeModule')}</button>
+	</f:form>
+
+	<script>
+		$(document).ready(function () {
+            var myCodeMirrorScss = CodeMirror.fromTextArea(document.getElementById("code-scss"), {
+                lineNumbers: true,
+                matchBrackets: true,
+                mode: "text/x-scss",
+                gutters: ["CodeMirror-lint-markers"],
+                showTrailingSpace: true,
+                autoCloseBrackets: true,
+                lint: {
+                    options: {
+                        rules: {
+                            "no-empty-rulesets": 1,
+							"no-important": 1,
+							"no-ids": 1,
+                            "hex-notation": 1,
+							"indentation": 1
+                        }
+                    }
+                },
+                extraKeys: {"Ctrl-Space": "autocomplete"},
+                value: document.documentElement.innerHTML
+            });
+
+            var myCodeMirrorCss = CodeMirror.fromTextArea(document.getElementById("code-css"), {
+                lineNumbers: true,
+                matchBrackets: true,
+                mode: "text/css",
+                gutters: ["CodeMirror-lint-markers"],
+                showTrailingSpace: true,
+                autoCloseBrackets: true,
+                lint: {
+                    options: {
+                        rules: {
+                            "no-empty-rulesets": 1
+                        }
+                    }
+                },
+                extraKeys: {"Ctrl-Space": "autocomplete"},
+                value: document.documentElement.innerHTML
+            });
+        })
+	</script>
 </div>

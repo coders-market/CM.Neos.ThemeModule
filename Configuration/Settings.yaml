@@ -1,12 +1,28 @@
+Neos:
+  Neos:
+    modules:
+      administration:
+        submodules:
+          themeModule:
+            label: 'Theme Settings'
+            controller: 'CM\Neos\ThemeModule\Controller\BackendController'
+            description: 'Customize your Theme'
+            icon: 'icon-sliders'
+            privilegeTarget: 'CM.Neos.ThemeModule:BackendModule'
+    userInterface:
+      translation:
+        autoInclude:
+          'CM.Neos.ThemeModule': ['*']
+
 CM:
   Neos:
     ThemeModule:
-      modules:
-        management:
-          submodules:
-            themeModule:
-              label: 'Theme Settings'
-              controller: 'CM\Neos\ThemeModule\Controller\BackendController'
-              description: 'Customize your Theme'
-              icon: 'icon-sliders'
-              privilegeTarget: 'CM.Neos.ThemeModule:BackendModule'
+      scss:
+        importPaths: 'resource://Vendor.Site.Package/Private/Styles/'
+        # Contains all scss rules and @imports to other files
+        mainScssFile: 'Main.scss'
+        # Expanded, Nested (default), Compressed, Compact, Crunched
+        formatter: 'Leafo\ScssPhp\Formatter\Nested'
+        # Output path has to be in Package Public folder
+        outputPath: 'resource://Vendor.Site.Package/Public/Styles/'
+        outputFilename: 'Main.css'
