@@ -65,7 +65,7 @@
 		<ul class="default-list font-list">
 			<f:for each="{elements}" as="element" key="elementKey">
 				<f:if condition="{element.value}">
-					<li><f:render section="typeFont" arguments="{element: element, elementKey: elementKey, typeKey: typeKey, groupKey: groupKey}" />	</li>
+					<li><f:render section="typeFont" arguments="{element: element, elementKey: elementKey, typeKey: typeKey, groupKey: groupKey}" /></li>
 				</f:if>
 			</f:for>
 		</ul>
@@ -75,7 +75,7 @@
 		<ul class="default-list textfield-list">
 			<f:for each="{elements}" as="element" key="elementKey">
 				<f:if condition="{element.value}">
-					<li><f:render section="typeTextfield" arguments="{element: element, elementKey: elementKey, typeKey: typeKey, groupKey: groupKey}" />	</li>
+					<li><f:render section="typeTextfield" arguments="{element: element, elementKey: elementKey, typeKey: typeKey, groupKey: groupKey}" /></li>
 				</f:if>
 			</f:for>
 		</ul>
