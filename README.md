@@ -73,7 +73,12 @@ CM:
                   label: 'Font Width' # The label which should be shown in the backend.                                                         
 ```
 
+**Attention:**
+In order to be able to override your defined scss variables in your scss file, the variable must have the value `!default`
+
+
 **Defining color:**
+
 To add an input form with an additional color picker add this and change it to your needs
 
 ```
@@ -87,6 +92,7 @@ type:
 
 
 **Defining fonts:**
+
 To add a selectbox with fonts from Google Webfonts and other additional fonts add this and change it to your needs
 
 ```
@@ -102,7 +108,9 @@ type:
         'Consolas': 'Consolas' # Additional font (e.g. not included in Google Webfonts)
 ```
 
+
 **Defining textbox:**
+
 To add a regular input form add this and change it to your needs
 
 ```

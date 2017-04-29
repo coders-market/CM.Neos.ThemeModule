@@ -122,7 +122,7 @@ class BackendController extends ActionController {
 			$this->settingsRepository->update($settings);
 		}
 
-		$this->compileScss();
+		$this->compileScss($settings);
 
 		$this->redirect('index');
 	}
@@ -130,11 +130,11 @@ class BackendController extends ActionController {
 
 	/**
 	 * Compile scss to css and add custom scss/css
+	 *
+	 * @param Settings $settings current settings
 	 */
-	private function compileScss(){
+	private function compileScss(Settings $settings){
 
-		/** @var Settings $dbSettings */
-		$settings = $this->settingsRepository->findActive();
 		$themeSettings = $this->buildThemeSettings();
 
 		$scssVars = array();

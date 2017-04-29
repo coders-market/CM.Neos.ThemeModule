@@ -54,7 +54,9 @@
 	<f:if condition="{typeKey} == 'color'">
 		<ul class="default-list color-list">
 			<f:for each="{elements}" as="element" key="elementKey">
-				<li><f:render section="typeColor" arguments="{element: element, elementKey: elementKey, typeKey: typeKey, groupKey: groupKey}" /></li>
+				<f:if condition="{element.value}">
+					<li><f:render section="typeColor" arguments="{element: element, elementKey: elementKey, typeKey: typeKey, groupKey: groupKey}" /></li>
+				</f:if>
 			</f:for>
 		</ul>
 	</f:if>
@@ -62,7 +64,9 @@
 	<f:if condition="{typeKey} == 'font'">
 		<ul class="default-list font-list">
 			<f:for each="{elements}" as="element" key="elementKey">
-				<li><f:render section="typeFont" arguments="{element: element, elementKey: elementKey, typeKey: typeKey, groupKey: groupKey}" />	</li>
+				<f:if condition="{element.value}">
+					<li><f:render section="typeFont" arguments="{element: element, elementKey: elementKey, typeKey: typeKey, groupKey: groupKey}" /></li>
+				</f:if>
 			</f:for>
 		</ul>
 	</f:if>
@@ -70,7 +74,9 @@
 	<f:if condition="{typeKey} == 'textfield'">
 		<ul class="default-list textfield-list">
 			<f:for each="{elements}" as="element" key="elementKey">
-				<li><f:render section="typeTextfield" arguments="{element: element, elementKey: elementKey, typeKey: typeKey, groupKey: groupKey}" />	</li>
+				<f:if condition="{element.value}">
+					<li><f:render section="typeTextfield" arguments="{element: element, elementKey: elementKey, typeKey: typeKey, groupKey: groupKey}" /></li>
+				</f:if>
 			</f:for>
 		</ul>
 	</f:if>
