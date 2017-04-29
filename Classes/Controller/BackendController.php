@@ -174,7 +174,6 @@ class BackendController extends ActionController {
 				$mainScssContent = $mainScssContent . "\n" . $settings->getCustomScss();
 			}
 
-			//$compiledCss = $scss->compile($mainScssContent);
 			$compiledCss = $scss->compile($mainScssContent);
 
 			if( $settings->getCustomCss() ) {
