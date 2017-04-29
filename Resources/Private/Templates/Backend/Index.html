@@ -1,11 +1,11 @@
-{namespace neos=Neos\Neos\ViewHelpers}
+{namespace neos=TYPO3\Neos\ViewHelpers}
 <div class="neos-content neos-container-fluid">
 
 	<div class="container-fluid">
 		<div class="row">
 			<h1>{neos:backend.translate(id: 'headline', package: 'CM.Neos.ThemeModule')}</h1>
 		</div>
-
+		
 		<f:form action="update" method="post" class="neos-button-primary" object="{settings}" name="settings">
 
 			<f:for each="{themeSettings}" as="group" key="groupKey">

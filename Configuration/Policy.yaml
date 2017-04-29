@@ -1,10 +1,10 @@
 privilegeTargets:
-  'Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege':
+  'TYPO3\Flow\Security\Authorization\Privilege\Method\MethodPrivilege':
         'CM.Neos.ThemeModule:BackendModule':
           matcher: 'method(CM\Neos\ThemeModule\Controller\BackendController->.*Action())'
 
 roles:
-  'Neos.Neos:Administrator':
+  'TYPO3.Neos:Administrator':
     privileges:
       -
         privilegeTarget: 'CM.Neos.ThemeModule:BackendModule'

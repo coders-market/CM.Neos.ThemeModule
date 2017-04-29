@@ -6,8 +6,8 @@
                 <source>Theme Settings</source>
             </trans-unit>
             <trans-unit id="button.save">
-				<source>Save Changes</source>
-			</trans-unit>
+      				  <source>Save Changes</source>
+      			</trans-unit>
             <trans-unit id="select.font.label">
                 <source>Select your font</source>
             </trans-unit>

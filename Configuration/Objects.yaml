@@ -2,7 +2,7 @@ CM\Neos\ThemeModule\Controller\BackendController:
   properties:
     cacheFrontend:
       object:
-        factoryObjectName: Neos\Flow\Cache\CacheManager
+        factoryObjectName: TYPO3\Flow\Cache\CacheManager
         factoryMethodName: getCache
         arguments:
           1:

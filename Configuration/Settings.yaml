@@ -1,4 +1,4 @@
-Neos:
+TYPO3:
   Neos:
     modules:
       administration:
@@ -11,7 +11,7 @@ Neos:
             privilegeTarget: 'CM.Neos.ThemeModule:BackendModule'
             additionalResources:
               styleSheets:
-                - 'resource://Neos.Twitter.Bootstrap/Public/3.3/css/bootstrap.css'
+                - 'resource://TYPO3.Twitter.Bootstrap/Public/3.3/css/bootstrap.css'
                 - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/lib/codemirror.css'
                 - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/lint/lint.css'
                 - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/fold/foldgutter.css'
@@ -192,4 +192,3 @@ CM:
                   value: '3px'
                   scssVariableName: '$border-radius-small'
                   label: 'Border Radius Small'
-
