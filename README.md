@@ -7,17 +7,27 @@ This packages allows you to customize your theme package in a backend module.
 Features
 --------
 
-* Change colors and fonts
-* Add custom scss
+* Full customizable, predefine any scss variables
+* Support for bootstrap, foundation and many more  
+* Change colors and fonts in the backend of Neos
+* Add custom additional scss/css code
 * Render your SCSS files
-* Add favicons to your page
+* No dependencies to sass compiler libraries
 
 
 Requirements / Limitations
 --------------------------
 
-* This package is working with Neos 2.3 LTS and Neos 3.0
-* So far the new React Backend is not supported
+* This package is tested with Neos 3.0
+
+
+Getting Started
+---------------
+
+1) Run `composer require cm/neos-thememodule`
+2) Run `./flow doctrine:migrate`
+3) You need a site package in `Packages/Sites` which has your scss code. Currently no other locations are working
+4) Have a look in `CM.Neos.ThemeModule\Configuration\Settings.yaml` there are some defaults defined which you can easily override and/or extend to your needs
 
 
 License

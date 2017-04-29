@@ -1,0 +1,23 @@
+{
+  "name": "CM.Neos.ThemeModule",
+  "homepage": "https://github.com/coders-market/CM.Neos.ThemeModule",
+  "authors": [
+    "Alexander Kappler <info@coders.market>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "GPL-3.0+",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "spectrum": "^1.8.0",
+    "codemirror": "^5.25.0",
+    "bootstrap-colorpicker": "^2.5.1"
+  }
+}

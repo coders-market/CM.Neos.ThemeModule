@@ -1,0 +1,32 @@
+.neos div.row {
+	padding-bottom: 20px;
+}
+
+.neos h1,
+.neos h2,
+.neos h3,
+.neos h4 {
+	font-weight: bold;
+}
+
+.neos h1 {
+	font-size: 16px;
+}
+
+.neos .default-list {
+	margin: 0 -20px;
+}
+
+.neos .default-list li {
+	display: inline-block;
+	margin: 0 20px 20px;
+	width: 250px;
+}
+
+.neos .font-list li select {
+	width: 250px;
+}
+
+.neos .textfield-list .input-group {
+	width: 100%;
+}

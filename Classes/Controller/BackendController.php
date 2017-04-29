@@ -15,6 +15,7 @@ use Leafo\ScssPhp\Compiler;
 use Neos\Flow\Property\TypeConverter\ArrayConverter;
 use Neos\Neos\Domain\Model\Site;
 use Neos\Neos\Domain\Repository\SiteRepository;
+use Neos\Utility\Unicode\Functions;
 
 class BackendController extends ActionController {
 
@@ -88,17 +89,19 @@ class BackendController extends ActionController {
 	 * Default index action
 	 */
 	public function indexAction() {
+
+		/** @var Settings $dbSettings */
 		$activeSettings = $this->settingsRepository->findActive();
 
-		$fonts = $this->getGoogleWebfonts();
-
-		if (!$activeSettings) {
+		if ( !$activeSettings ) {
 			$activeSettings = new Settings();
 		}
 
+		$themeSettings = $this->buildThemeSettings();
+
 		$this->view->assignMultiple(array(
 			'settings' => $activeSettings,
-			'fonts' => array_column($fonts['items'],'family', 'family')
+			'themeSettings' => $themeSettings
 		));
 	}
 
@@ -106,10 +109,12 @@ class BackendController extends ActionController {
 	/**
 	 * Update theme settings
 	 *
-	 * @param Settings $settings Custom theme setting object
+	 * @param Settings 	$settings 			Custom theme setting object
+	 * @param array 	$customSettings		Custom settings for the theme
 	 */
-	public function updateAction(Settings $settings){
-		xdebug_break();
+	public function updateAction(Settings $settings, $customSettings = array()){
+
+		$settings->setCustomSettings(json_encode($customSettings));
 
 		if ($settings instanceof Settings && $this->persistenceManager->isNewObject($settings)) {
 			$this->settingsRepository->add($settings);
@@ -117,7 +122,7 @@ class BackendController extends ActionController {
 			$this->settingsRepository->update($settings);
 		}
 
-		$this->compileScss($settings->getCustomCss(), $settings->getCustomScss());
+		$this->compileScss();
 
 		$this->redirect('index');
 	}
@@ -125,36 +130,57 @@ class BackendController extends ActionController {
 
 	/**
 	 * Compile scss to css and add custom scss/css
-	 *
-	 * @param string $customCss 	Custom css code to append
-	 * @param string $customScss 	Custom scss code to append
-	 * @param string $customFont 	The selected font
 	 */
-	private function compileScss($customCss = '', $customScss = '', $customFont = ''){
+	private function compileScss(){
+
+		/** @var Settings $dbSettings */
+		$settings = $this->settingsRepository->findActive();
+		$themeSettings = $this->buildThemeSettings();
+
+		$scssVars = array();
+
+		foreach ($themeSettings as $group) {
+			foreach ($group['type'] as $typeKey => $typeValue) {
+				foreach ($typeValue as $element) {
+					if ($typeKey === 'font') {
+						$scssVars[$element['scssVariableName']] = '"' . $element['value'] .'", ' . $element['fontFallbackValue'];
+					} else {
+						$scssVars[$element['scssVariableName']] = $element['value'];
+					}
+
+				}
+			}
+		}
 
 		try {
 
+			// get absolute path to scss folder
+			$pathParts = Functions::parse_url($this->configuration['scss']['importPaths']);
+			$scssAbsolutePath = FLOW_PATH_ROOT . 'Packages/Sites/'. $pathParts['host'] .'/Resources' . $pathParts['path'];
+			$scssAbsolutePath = FileUtility::getUnixStylePath($scssAbsolutePath);
+
 			$scss = new Compiler();
-			$scss->setImportPaths($this->configuration['scss']['importPaths']);
+			$scss->setImportPaths($scssAbsolutePath);
+
 			$scss->setFormatter($this->configuration['scss']['formatter']);
+			$scss->setVariables($scssVars);
 
 			$mainScssFileAndPath = FileUtility::concatenatePaths(array($this->configuration['scss']['importPaths'],$this->configuration['scss']['mainScssFile']));
 
 			$mainScssContent = FileUtility::getFileContents($mainScssFileAndPath);
 
-			if( $customScss ) {
+			if( $settings->getCustomScss() ) {
 				// add custom scss code to the end of the file
-				$mainScssContent = $mainScssContent . "\n" . $customScss;
-
+				$mainScssContent = $mainScssContent . "\n" . $settings->getCustomScss();
 			}
 
+			//$compiledCss = $scss->compile($mainScssContent);
 			$compiledCss = $scss->compile($mainScssContent);
 
-			if( $customCss ) {
+			if( $settings->getCustomCss() ) {
 				// add custom css code to the end of the file
-				$compiledCss = $compiledCss . "\n" . $customCss;
+				$compiledCss = $compiledCss . "\n" . $settings->getCustomCss();
 			}
-
 
 			FileUtility::writeStaticFile($this->configuration['scss']['outputPath'],$this->configuration['scss']['outputFilename'],$compiledCss);
 
@@ -206,6 +232,36 @@ class BackendController extends ActionController {
 		return $fontsArray;
 	}
 
+
+	/**
+	 * Merge google fonts with custom defined yaml fonts
+	 *
+	 * @return array
+	 */
+	function addGoogleFonts($themeArray) {
+		$googleFonts = $this->getGoogleWebfonts();
+		$googleFonts = array_column($googleFonts['items'],'family', 'family');
+
+		foreach($themeArray as $groupKey=>$groupValue)
+		{
+			foreach ($groupValue['type'] as $typeKey=>$typeValue) {
+				if ($typeKey === 'font') {
+					foreach ($typeValue as $elementKey=>$elementValue) {
+						if (isset($themeArray[$groupKey]['type'][$typeKey][$elementKey]['options'])){
+							$themeArray[$groupKey]['type'][$typeKey][$elementKey]['options'] = array_replace_recursive($themeArray[$groupKey]['type'][$typeKey][$elementKey]['options'], $googleFonts);
+						} else {
+							$themeArray[$groupKey]['type'][$typeKey][$elementKey]['options'] = array();
+							$themeArray[$groupKey]['type'][$typeKey][$elementKey]['options'] = $googleFonts;
+						}
+
+					}
+				}
+			}
+		}
+
+		return $themeArray;
+	}
+
 	/**
 	 * Get domain of page
 	 *
@@ -233,4 +289,31 @@ class BackendController extends ActionController {
 
 		return $hostname;
 	}
+
+
+	/**
+	 * Build Theme Settings based on Settings.yaml and custom values
+	 *
+	 * @return array
+	 */
+	protected function buildThemeSettings() {
+		// Get all settings from yaml
+		$themeYamlSettings = $this->configuration['scss']['presetVariables'];
+
+		/** @var Settings $dbSettings */
+		$dbSettings = $this->settingsRepository->findActive();
+
+		if(count($dbSettings) > 0 && $dbSettings->getCustomSettings()) {
+
+			$dbCustomSettings = json_decode($dbSettings->getCustomSettings(), true);
+			$themeArray = array_replace_recursive($themeYamlSettings,$dbCustomSettings);
+		} else {
+			$themeArray = $themeYamlSettings;
+		}
+
+		$themeArray = $this->addGoogleFonts($themeArray);
+
+		return $themeArray;
+	}
+
 }

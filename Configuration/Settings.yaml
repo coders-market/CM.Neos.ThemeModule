@@ -9,6 +9,34 @@ Neos:
             description: 'Customize your Theme'
             icon: 'icon-sliders'
             privilegeTarget: 'CM.Neos.ThemeModule:BackendModule'
+            additionalResources:
+              styleSheets:
+                - 'resource://Neos.Twitter.Bootstrap/Public/3.3/css/bootstrap.css'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/lib/codemirror.css'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/lint/lint.css'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/fold/foldgutter.css'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/hint/show-hint.css'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css'
+                - 'resource://CM.Neos.ThemeModule/Public/Styles/ThemeModule.css'
+              javaScripts:
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/lib/codemirror.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/fold/foldcode.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/fold/foldgutter.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/fold/brace-fold.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/fold/comment-fold.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/fold/indent-fold.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/lint/lint.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/lint/css-lint.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/edit/trailingspace.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/edit/closebrackets.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/edit/matchbrackets.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/hint/show-hint.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/hint/css-hint.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror-scss-linter/scsslint.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror-scss-linter/scss-lint.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/mode/css/css.js'
+                - 'resource://CM.Neos.ThemeModule/Public/Components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js'
+                - 'resource://CM.Neos.ThemeModule/Public/JavaScript/Main.js'
     userInterface:
       translation:
         autoInclude:
@@ -26,3 +54,165 @@ CM:
         # Output path has to be in Package Public folder
         outputPath: 'resource://Vendor.Site.Package/Public/Styles/'
         outputFilename: 'Main.css'
+
+        # Define your default scss variable value
+        # You can add/remove values to this list
+        # The order: BE module values, Settings.yaml values, scss file defined value
+        # The following is based on Bootstrap 3.x adapt to your needs
+
+        # Your scss variables which should be customizeable in the BE module
+         # Add/remove to your needs
+         # Valid types: textfield, color, font
+        presetVariables:
+          color: # group
+            label: 'Your Color Settings'
+            type:
+              color:
+                greyBase:
+                  value: '#000000'
+                  scssVariableName: '$grey-base'
+                  cssDefault: true
+                  label: 'Grey Base'
+                bodyBgColor:
+                  value: '#ffffff'
+                  scssVariableName: '$body-bg'
+                  cssDefault: true
+                  label: 'Background Color'
+                brandPrimaryColor:
+                  value: '#e64442'
+                  scssVariableName: '$brand-primary'
+                  cssDefault: true
+                  label: 'Primary Brand Color'
+                brandSuccessColor:
+                  value: '#00f00'
+                  scssVariableName: '$brand-success'
+                  cssDefault: true
+                  label: 'Brand Success Color'
+                brandInfoColor:
+                  value: '#666666'
+                  scssVariableName: '$brand-info'
+                  cssDefault: true
+                  label: 'Brand Info Color'
+                brandWarningColor:
+                  value: '#00f0f0'
+                  scssVariableName: '$brand-warning'
+                  cssDefault: true
+                  label: 'Brand Warning Color'
+                brandDangerColor:
+                  value: '#ff0000'
+                  scssVariableName: '$brand-danger'
+                  cssDefault: true
+                  label: 'Brand Danger Color'
+          font:
+            label: 'Your Font Settings'
+            type:
+              font:
+                fontFamilySansSerif:
+                  value: 'Times New Roman'
+                  fontFallbackValue: 'Helvetica, Arial, sans-serif'
+                  scssVariableName: '$font-family-sans-serif'
+                  cssDefault: true
+                  label: 'Font Family Sans Serif'
+                  options:
+                    'Arial': 'Arial'
+                    'Helvetica Neue': 'Helvetica Neue'
+                    'Times New Roman': 'Times New Roman'
+
+                fontFamilySerif:
+                  value: 'Anton'
+                  fontFallbackValue: '"Times New Roman", Times, serif'
+                  scssVariableName: '$font-family-serif'
+                  cssDefault: true
+                  label: 'Font Family Serif'
+                  options:
+                    'Arial': 'Arial'
+                    'Helvetica Neue': 'Helvetica Neue'
+                    'Times New Roman': 'Times New Roman'
+                fontFamilyMonospace:
+                  value: 'Consolas'
+                  fontFallbackValue: 'Monaco, Consolas, "Courier New", monospace'
+                  scssVariableName: '$font-family-monospace'
+                  cssDefault: true
+                  label: 'Font Family Monospace'
+                  options:
+                    'Arial': 'Arial'
+                    'Consolas': 'Consolas'
+
+              textfield:
+                fontSizeBase:
+                  value: '14px'
+                  scssVariableName: '$font-size-base'
+                  cssDefault: true
+                  label: 'Base Font Size in px'
+                headingsFontWeight:
+                  value: '500'
+                  scssVariableName: '$headings-font-weight'
+                  cssDefault: true
+                  label: 'Headings Font Weight'
+
+          button:
+            label: 'Your Button Settings'
+            type:
+              color:
+                btnDefaultColor:
+                  value: '#333'
+                  scssVariableName: '$btn-default-color'
+                  cssDefault: true
+                  label: 'Default Button Color'
+                btnDefaultBgColor:
+                  value: '#fff'
+                  scssVariableName: '$btn-default-bg'
+                  cssDefault: true
+                  label: 'Default Button Background Color'
+                btnDefaultBorder:
+                  value: '#ccc'
+                  scssVariableName: '$btn-default-border'
+                  cssDefault: true
+                  label: 'Default Button Border Color'
+
+                btnPrimaryColor:
+                  value: '#fff'
+                  scssVariableName: '$btn-primary-color'
+                  cssDefault: true
+                  label: 'Primary Button Color'
+                btnSuccessColor:
+                  value: '#fff'
+                  scssVariableName: '$btn-success-color'
+                  cssDefault: true
+                  label: 'Success Button Color'
+                btnInfoColor:
+                  value: '#fff'
+                  scssVariableName: '$btn-info-color'
+                  cssDefault: true
+                  label: 'Info Button Color'
+                btnWarningColor:
+                  value: '#fff'
+                  scssVariableName: '$btn-warning-color'
+                  cssDefault: true
+                  label: 'Warning Button Color'
+                btnDangerColor:
+                  value: '#333'
+                  scssVariableName: '$btn-danger-color'
+                  cssDefault: true
+                  label: 'Danger Button Color'
+
+          radius:
+            label: 'Your Border Radius Settings'
+            type:
+              textfield:
+                borderRadiusBase:
+                  value: '4px'
+                  scssVariableName: '$border-radius-base'
+                  cssDefault: true
+                  label: 'Border Radius Base'
+                borderRadiusLarge:
+                  value: '6px'
+                  scssVariableName: '$border-large-large'
+                  cssDefault: true
+                  label: 'Border Radius Large'
+                borderRadiusSmall:
+                  value: '3px'
+                  scssVariableName: '$border-radius-small'
+                  cssDefault: true
+                  label: 'Border Radius Small'
+

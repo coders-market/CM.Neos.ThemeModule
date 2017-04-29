@@ -4,7 +4,7 @@
     "license": "GPL-3.0+",
     "description": "Backend module to customize supported themes / site packages",
     "require": {
-        "neos/neos": "~2.3.0 || ~3.0.0",
+        "neos/neos": "~2.3.0 || ~3.0",
         "leafo/scssphp": "~0.6.7"
     },
     "autoload": {

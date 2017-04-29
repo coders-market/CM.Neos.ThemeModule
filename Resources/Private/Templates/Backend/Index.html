@@ -1,83 +1,105 @@
 {namespace neos=Neos\Neos\ViewHelpers}
 <div class="neos-content neos-container-fluid">
 
-	<link rel="stylesheet" href="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/lib/codemirror.css')}" type="text/css" />
-	<link rel="stylesheet" href="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/lint/lint.css')}" type="text/css" />
-	<link rel="stylesheet" href="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/fold/foldgutter.css')}" type="text/css" />
-	<link rel="stylesheet" href="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/hint/show-hint.css')}" type="text/css" />
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/lib/codemirror.js')}"></script>
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/fold/foldcode.js')}"></script>
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/fold/foldgutter.js')}"></script>
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/fold/brace-fold.js')}"></script>
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/fold/comment-fold.js')}"></script>
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/fold/indent-fold.js')}"></script>
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/lint/lint.js')}"></script>
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/lint/css-lint.js')}"></script>
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/edit/trailingspace.js')}"></script>
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/edit/closebrackets.js')}"></script>
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/edit/matchbrackets.js')}"></script>
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/hint/show-hint.js')}"></script>
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/addon/hint/css-hint.js')}"></script>
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror-scss-linter/scsslint.js')}"></script>
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror-scss-linter/scss-lint.js')}"></script>
-	<script type="text/javascript" src="{f:uri.resource(package: 'CM.Neos.ThemeModule', path: 'Components/codemirror/mode/css/css.js')}"></script>
+	<div class="container-fluid">
+		<div class="row">
+			<h1>{neos:backend.translate(id: 'headline', package: 'CM.Neos.ThemeModule')}</h1>
+		</div>
 
-	<h1>{neos:backend.translate(id: 'headline', package: 'CM.Neos.ThemeModule')}</h1>
-	<br />
-	<f:form action="update" method="post" class="neos-button-primary" object="{settings}" name="settings">
+		<f:form action="update" method="post" class="neos-button-primary" object="{settings}" name="settings">
 
-		<label for="font-family">{neos:backend.translate(id: 'select.font.label', package: 'CM.Neos.ThemeModule')}</label>
-		<f:form.select property="customFont" id="font-family" options="{fonts}" prependOptionLabel="{neos:backend.translate(id: 'select.font.prependOptionLabel', package: 'CM.Neos.ThemeModule')}" />
+			<f:for each="{themeSettings}" as="group" key="groupKey">
+				<f:render section="group" arguments="{group: group, groupKey: groupKey, fonts: fonts}" />
+			</f:for>
 
-		<label for="code-scss">{neos:backend.translate(id: 'textarea.scss.label', package: 'CM.Neos.ThemeModule')}</label>
-		<f:form.textarea property="customScss" id="code-scss" rows="10" cols="70"/><br />
-		<label for="code-scss">{neos:backend.translate(id: 'textarea.css.label', package: 'CM.Neos.ThemeModule')}</label>
-		<f:form.textarea property="customCss" id="code-css" rows="10" cols="70" /><br />
-		<br />
-		<button type="submit" title="{neos:backend.translate(id: 'button.save', package: 'CM.Neos.ThemeModule')}" data-neos-toggle="tooltip"><i class="icon-refresh"></i> {neos:backend.translate(id: 'button.save', package: 'CM.Neos.ThemeModule')}</button>
-	</f:form>
+			<!-- Custom SCSS / CSS input -->
+			<div class="row">
+				<h2>{neos:backend.translate(id: 'textarea.scss.label', package: 'CM.Neos.ThemeModule')}</h2>
+				<!-- Custom scss to append -->
+				<f:form.textarea property="customScss" id="code-scss" rows="10" cols="70"/><br />
+			</div>
+			<div class="row">
+				<h2>{neos:backend.translate(id: 'textarea.css.label', package: 'CM.Neos.ThemeModule')}</h2>
+				<!-- Custom css code to append -->
+				<f:form.textarea property="customCss" id="code-css" rows="10" cols="70" /><br />
+			</div>
 
-	<script>
-		$(document).ready(function () {
-            var myCodeMirrorScss = CodeMirror.fromTextArea(document.getElementById("code-scss"), {
-                lineNumbers: true,
-                matchBrackets: true,
-                mode: "text/x-scss",
-                gutters: ["CodeMirror-lint-markers"],
-                showTrailingSpace: true,
-                autoCloseBrackets: true,
-                lint: {
-                    options: {
-                        rules: {
-                            "no-empty-rulesets": 1,
-							"no-important": 1,
-							"no-ids": 1,
-                            "hex-notation": 1,
-							"indentation": 1
-                        }
-                    }
-                },
-                extraKeys: {"Ctrl-Space": "autocomplete"},
-                value: document.documentElement.innerHTML
-            });
+			<div class="row">
+				<button type="submit" title="{neos:backend.translate(id: 'button.save', package: 'CM.Neos.ThemeModule')}" data-neos-toggle="tooltip"><i class="icon-refresh"></i> {neos:backend.translate(id: 'button.save', package: 'CM.Neos.ThemeModule')}</button>
+			</div>
+		</f:form>
+	</div>
 
-            var myCodeMirrorCss = CodeMirror.fromTextArea(document.getElementById("code-css"), {
-                lineNumbers: true,
-                matchBrackets: true,
-                mode: "text/css",
-                gutters: ["CodeMirror-lint-markers"],
-                showTrailingSpace: true,
-                autoCloseBrackets: true,
-                lint: {
-                    options: {
-                        rules: {
-                            "no-empty-rulesets": 1
-                        }
-                    }
-                },
-                extraKeys: {"Ctrl-Space": "autocomplete"},
-                value: document.documentElement.innerHTML
-            });
-        })
-	</script>
 </div>
+
+<f:section name="group">
+	<div class="row">
+		<div class="column">
+			<h2>{group.label}</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="column">
+			<div class="group-settings">
+				<f:for each="{group.type}" as="type" key="typeKey">
+					<f:render section="element" arguments="{group: group, typeKey: typeKey, elements: type, groupKey: groupKey}" />
+				</f:for>
+			</div>
+		</div>
+	</div>
+</f:section>
+
+
+<f:section name="element">
+	<f:if condition="{typeKey} == 'color'">
+		<ul class="default-list color-list">
+			<f:for each="{elements}" as="element" key="elementKey">
+				<li><f:render section="typeColor" arguments="{element: element, elementKey: elementKey, typeKey: typeKey, groupKey: groupKey}" /></li>
+			</f:for>
+		</ul>
+	</f:if>
+
+	<f:if condition="{typeKey} == 'font'">
+		<ul class="default-list font-list">
+			<f:for each="{elements}" as="element" key="elementKey">
+				<li><f:render section="typeFont" arguments="{element: element, elementKey: elementKey, typeKey: typeKey, groupKey: groupKey}" />	</li>
+			</f:for>
+		</ul>
+	</f:if>
+
+	<f:if condition="{typeKey} == 'textfield'">
+		<ul class="default-list textfield-list">
+			<f:for each="{elements}" as="element" key="elementKey">
+				<li><f:render section="typeTextfield" arguments="{element: element, elementKey: elementKey, typeKey: typeKey, groupKey: groupKey}" />	</li>
+			</f:for>
+		</ul>
+	</f:if>
+</f:section>
+
+
+<f:section name="typeColor">
+	<div class="form-group">
+		<label for="{elementKey}">{neos:backend.translate(id: 'input.customSettings.{element.label}.label', package: 'CM.Neos.ThemeModule', value: '{element.label}')}</label>
+		<div class="input-group colorpicker-component custom-color">
+			<f:form.textfield name="customSettings[{groupKey}][type][{typeKey}][{elementKey}][value]" id="{elementKey}" class="form-control" value="{element.value}" /><span class="input-group-addon"><i></i></span>
+		</div>
+	</div>
+</f:section>
+
+<f:section name="typeFont">
+	<div class="form-group">
+		<label for="{elementKey}">{neos:backend.translate(id: 'input.customSettings.{element.label}.label', package: 'CM.Neos.ThemeModule', value: '{element.label}')}</label>
+		<div class="input-group custom-font">
+			<f:form.select name="customSettings[{groupKey}][type][{typeKey}][{elementKey}][value]" id="{elementKey}" class="custom-font-family" options="{element.options}" value="{element.value}" prependOptionLabel="{neos:backend.translate(id: 'select.font.prependOptionLabel', package: 'CM.Neos.ThemeModule')}" />
+		</div>
+	</div>
+</f:section>
+
+<f:section name="typeTextfield">
+	<div class="form-group">
+		<label for="{elementKey}">{neos:backend.translate(id: 'input.customSettings.{element.label}.label', package: 'CM.Neos.ThemeModule', value: '{element.label}')}</label>
+		<div class="input-group custom-textfield">
+			<f:form.textfield name="customSettings[{groupKey}][type][{typeKey}][{elementKey}][value]" id="{elementKey}" class="form-control" value="{element.value}" />
+		</div>
+	</div>
+</f:section>
