@@ -2,7 +2,7 @@
 
 namespace CM\Neos\ThemeModule;
 
-use TYPO3\Flow\Utility\Files;
+use Neos\Utility\Files;
 
 class FileUtility extends Files
 {

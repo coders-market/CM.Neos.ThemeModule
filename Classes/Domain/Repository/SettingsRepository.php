@@ -3,8 +3,8 @@
 namespace CM\Neos\ThemeModule\Domain\Repository;
 
 use CM\Neos\ThemeModule\Domain\Model\Settings;
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Persistence\Doctrine\Repository;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Persistence\Doctrine\Repository;
 
 /**
  * Theme Settings Repository

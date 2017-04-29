@@ -1,4 +1,4 @@
-TYPO3:
+Neos:
   Neos:
     modules:
       administration:
@@ -11,7 +11,7 @@ TYPO3:
             privilegeTarget: 'CM.Neos.ThemeModule:BackendModule'
             additionalResources:
               styleSheets:
-                - 'resource://TYPO3.Twitter.Bootstrap/Public/3.3/css/bootstrap.css'
+                - 'resource://Neos.Twitter.Bootstrap/Public/3.3/css/bootstrap.css'
                 - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/lib/codemirror.css'
                 - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/lint/lint.css'
                 - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/addon/fold/foldgutter.css'
