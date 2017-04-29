@@ -1,21 +1,21 @@
 <?php
 namespace CM\Neos\ThemeModule\Controller;
 
-use Neos\Cache\Frontend\VariableFrontend;
-use Neos\Flow\Annotations as Flow;
-use Neos\Flow\Configuration\ConfigurationManager;
-use Neos\Flow\Log\SystemLoggerInterface;
-use Neos\Flow\Mvc\Controller\ActionController;
-use Neos\Flow\Http\Client\Browser;
-use Neos\Flow\Http\Client\CurlEngine;
+use TYPO3\Flow\Cache\Frontend\VariableFrontend;
+use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Configuration\ConfigurationManager;
+use TYPO3\Flow\Log\SystemLoggerInterface;
+use TYPO3\Flow\Mvc\Controller\ActionController;
+use TYPO3\Flow\Http\Client\Browser;
+use TYPO3\Flow\Http\Client\CurlEngine;
 use CM\Neos\ThemeModule\Domain\Model\Settings;
 use CM\Neos\ThemeModule\Domain\Repository\SettingsRepository;
 use CM\Neos\ThemeModule\FileUtility;
 use Leafo\ScssPhp\Compiler;
-use Neos\Flow\Property\TypeConverter\ArrayConverter;
-use Neos\Neos\Domain\Model\Site;
-use Neos\Neos\Domain\Repository\SiteRepository;
-use Neos\Utility\Unicode\Functions;
+use TYPO3\Flow\Property\TypeConverter\ArrayConverter;
+use TYPO3\Neos\Domain\Model\Site;
+use TYPO3\Neos\Domain\Repository\SiteRepository;
+use TYPO3\Flow\Utility\Unicode\Functions;
 
 class BackendController extends ActionController {
 
@@ -122,7 +122,7 @@ class BackendController extends ActionController {
 			$this->settingsRepository->update($settings);
 		}
 
-		$this->compileScss();
+		$this->compileScss($settings);
 
 		$this->redirect('index');
 	}
@@ -130,11 +130,11 @@ class BackendController extends ActionController {
 
 	/**
 	 * Compile scss to css and add custom scss/css
+	 *
+	 * @param Settings $settings current settings
 	 */
-	private function compileScss(){
+	private function compileScss(Settings $settings){
 
-		/** @var Settings $dbSettings */
-		$settings = $this->settingsRepository->findActive();
 		$themeSettings = $this->buildThemeSettings();
 
 		$scssVars = array();
