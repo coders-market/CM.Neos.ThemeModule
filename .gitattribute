@@ -1,3 +1,4 @@
 Resources/Public/Components/ linguist-vendored
 Resources/Public/Components/* linguist-vendored
+Resources/Public/Components/** linguist-vendored
 Resources/Public/Components linguist-vendored
