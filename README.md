@@ -31,6 +31,32 @@ Getting Started
 4) Have a look in `CM.Neos.ThemeModule\Configuration\Settings.yaml` there are some defaults defined which you can easily override and/or extend to your needs
 
 
+Adapt Settings.yaml to your needs
+---------------------------------
+
+In the Settings.yaml your have to declare the location of your scss code and your compiled css.
+
+ 
+```
+CM:
+  Neos:
+    ThemeModule:
+      scss:
+        # folder of your scss code
+        importPaths: 'resource://Vendor.Site.Package/Private/Styles/'
+        # Contains all scss rules and @imports to other files
+        mainScssFile: 'Main.scss'
+        # Expanded, Nested (default), Compressed, Compact, Crunched
+        formatter: 'Leafo\ScssPhp\Formatter\Nested'
+        # Output path has to be in Package Public folder
+        outputPath: 'resource://Vendor.Site.Package/Public/Styles/'
+        outputFilename: 'Main.css'
+``` 
+
+**IMPORTANT:** All your scss code has to be below specified `importPaths` using relative paths in a scss `@import` to a 
+folder outside the `importPaths` will fail.
+
+
 Defining a scss variable
 ------------------------
 
@@ -122,6 +148,9 @@ type:
       label: 'Font Size' # The label which should be shown in the backend.
 ```
 
+Contributing
+------------
+I highly encourage everyone to provide PRs for missing functionality, improvements or bugfixes. 
 
 
 License
