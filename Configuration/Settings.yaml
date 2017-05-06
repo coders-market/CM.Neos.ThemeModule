@@ -38,6 +38,8 @@ Neos:
                 - 'resource://CM.Neos.ThemeModule/Public/Components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js'
                 - 'resource://CM.Neos.ThemeModule/Public/JavaScript/Main.js'
     userInterface:
+      requireJsPathMapping:
+        'CM.Neos.ThemeModule/Validation': 'resource://CM.Neos.ThemeModule/Public/JavaScript/Inspector/Validators'
       translation:
         autoInclude:
           'CM.Neos.ThemeModule': ['*']

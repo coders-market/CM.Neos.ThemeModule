@@ -1,11 +1,9 @@
-Backend Site/Theme Module for Neos
-==================================
+# Backend Site/Theme Module for Neos
 
 This packages allows you to customize your theme package in a backend module.
  
 	
-Features
---------
+## Features
 
 * Full customizable, predefine any scss variables
 * Support for bootstrap, foundation and many more  
@@ -13,17 +11,17 @@ Features
 * Add custom additional scss/css code
 * Render your SCSS files
 * No dependencies to sass compiler libraries
+* Additonal Viewhelper
+* Support for google webfonts
 
 
-Requirements / Limitations
---------------------------
+## Requirements / Limitations
 
-* This package is tested with Neos 3.0
+* This package is tested with Neos 3.0 and 3.1
 * .sass is not supported!
 
 
-Getting Started
----------------
+## Getting Started
 
 1) Run `composer require cm/neos-thememodule`
 2) Run `./flow doctrine:migrate`
@@ -31,8 +29,7 @@ Getting Started
 4) Have a look in `CM.Neos.ThemeModule\Configuration\Settings.yaml` there are some defaults defined which you can easily override and/or extend to your needs
 
 
-Adapt Settings.yaml to your needs
----------------------------------
+### Adapt Settings.yaml to your needs
 
 In the Settings.yaml your have to declare the location of your scss code and your compiled css.
 
@@ -57,8 +54,7 @@ CM:
 folder outside the `importPaths` will fail.
 
 
-Defining a scss variable
-------------------------
+### Defining a scss variable
 
 You can define the scss variables which should be available on the backend module.
 To define define new variables add them to your `Settings.yaml`. Don't edit the `Settings.yaml` in this package as this
@@ -148,12 +144,34 @@ type:
       label: 'Font Size' # The label which should be shown in the backend.
 ```
 
-Contributing
-------------
+### Inspector Validator for color values: hex, rgb, rgba
+
+Add to your node property the validator like this:
+
+```
+'Neos.NodeTypes:Column':
+  properties:
+    backgroundColor:
+      type: string
+      validation:
+        '../../CM.Neos.ThemeModule/JavaScript/Inspector/Validators/ColorValidator': []
+```
+
+> Currently the there's a bug which makes it neccessary to add `../../` this issue is already reported. 
+See [github issue #1562](https://github.com/neos/neos-development-collection/issues/1562)
+
+
+**Valid values are:**
+* Hex: #fff or #ffffff
+* rgb: rgb(255,255,255)
+* rgba: rgba(255,255,255,0.3)
+
+
+## Contributing
+
 I highly encourage everyone to provide PRs for missing functionality, improvements or bugfixes. 
 
 
-License
--------
+## License
 
 Licensed under GPLv3+
