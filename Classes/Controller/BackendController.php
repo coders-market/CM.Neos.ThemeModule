@@ -1,6 +1,7 @@
 <?php
 namespace CM\Neos\ThemeModule\Controller;
 
+use CM\Neos\ThemeModule\Domain\Model\Font;
 use Neos\Cache\Frontend\VariableFrontend;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Configuration\ConfigurationManager;
@@ -85,6 +86,12 @@ class BackendController extends ActionController {
 	 */
 	protected $browserRequestEngine;
 
+
+	/**
+	 * @var array
+	 */
+	protected $fonts = array();
+
 	/**
 	 * Default index action
 	 */
@@ -99,9 +106,12 @@ class BackendController extends ActionController {
 
 		$themeSettings = $this->buildThemeSettings();
 
+		$fonts = $this->buildFontOptions();
+
 		$this->view->assignMultiple(array(
 			'settings' => $activeSettings,
-			'themeSettings' => $themeSettings
+			'themeSettings' => $themeSettings,
+			'fonts' => $fonts
 		));
 	}
 
@@ -143,7 +153,7 @@ class BackendController extends ActionController {
 			foreach ($group['type'] as $typeKey => $typeValue) {
 				foreach ($typeValue as $element) {
 					if ($typeKey === 'font') {
-						$scssVars[$element['scssVariableName']] = '"' . $element['value'] .'", ' . $element['fontFallbackValue'];
+						$scssVars[$element['scssVariableName']] = '"' . $element['value']['family'] .'", ' . $element['fontFallbackValue'];
 					} else {
 						$scssVars[$element['scssVariableName']] = $element['value'];
 					}
@@ -151,6 +161,8 @@ class BackendController extends ActionController {
 				}
 			}
 		}
+
+		$scssFontFace = $this->buildFontFaceScss();
 
 		try {
 
@@ -167,7 +179,9 @@ class BackendController extends ActionController {
 
 			$mainScssFileAndPath = FileUtility::concatenatePaths(array($this->configuration['scss']['importPaths'],$this->configuration['scss']['mainScssFile']));
 
-			$mainScssContent = FileUtility::getFileContents($mainScssFileAndPath);
+			$mainScssContent = $this->addFontScss();
+
+			$mainScssContent = $mainScssContent . FileUtility::getFileContents($mainScssFileAndPath);
 
 			if( $settings->getCustomScss() ) {
 				// add custom scss code to the end of the file
@@ -190,6 +204,36 @@ class BackendController extends ActionController {
 		}
 	}
 
+	/**
+	 * Build FontFace Scss code for selected fonts
+	 *
+	 * @return string
+	 */
+	private function buildFontFaceScss() {
+		$fontface = '';
+
+		return $fontface;
+	}
+
+	/**
+	 * Build the font array with select option list and array with font details like variants, subsets
+	 *
+	 * @return array
+	 */
+	private function buildFontOptions() {
+		$settingsFont = array();
+		$googleFonts = array();
+
+		if(isset($this->configuration['fontOptions']) && count($this->configuration['fontOptions']) > 0) {
+			$settingsFont = $this->fonts = $this->parseFonts($this->configuration['fontOptions']);
+		}
+
+		if(isset($this->configuration['addGoogleFonts']) && $this->configuration['addGoogleFonts'] !== false) {
+			$googleFonts = $this->fonts = $this->parseFonts($this->getGoogleWebfonts(), 'FONT_SOURCE_GOOGLE');
+		}
+
+		return array_merge_recursive($settingsFont, $googleFonts);
+	}
 
 	/**
 	 * Request for google webfonts, if cache is outdated, update cache
@@ -233,32 +277,35 @@ class BackendController extends ActionController {
 
 
 	/**
-	 * Merge google fonts with custom defined yaml fonts
+	 * Parse the array to a valid output
+	 *
+	 * @param $fontOptions	array	The defined fonts with all details
+	 * @param $fontSource string	Force font source (optional) possible values: FONT_SOURCE_LOCAL, FONT_SOURCE_CDN, FONT_SOURCE_GOOGLE
 	 *
 	 * @return array
 	 */
-	function addGoogleFonts($themeArray) {
-		$googleFonts = $this->getGoogleWebfonts();
-		$googleFonts = array_column($googleFonts['items'],'family', 'family');
+	function parseFonts($fontOptions, $fontSource = ''){
+		$font = array();
 
-		foreach($themeArray as $groupKey=>$groupValue)
-		{
-			foreach ($groupValue['type'] as $typeKey=>$typeValue) {
-				if ($typeKey === 'font') {
-					foreach ($typeValue as $elementKey=>$elementValue) {
-						if (isset($themeArray[$groupKey]['type'][$typeKey][$elementKey]['options'])){
-							$themeArray[$groupKey]['type'][$typeKey][$elementKey]['options'] = array_replace_recursive($themeArray[$groupKey]['type'][$typeKey][$elementKey]['options'], $googleFonts);
-						} else {
-							$themeArray[$groupKey]['type'][$typeKey][$elementKey]['options'] = array();
-							$themeArray[$groupKey]['type'][$typeKey][$elementKey]['options'] = $googleFonts;
-						}
+		if(isset($fontOptions['items'])){
+			foreach ($fontOptions['items'] as $fontItem) {
 
-					}
+				if(isset($fontItem['fontSource']) && $fontItem['fontSource'] !== '' && $fontSource === '') {
+					$fontSource = $fontItem['fontSource'];
 				}
+
+				$font['options'][$fontItem['category']][] = new Font(
+					$fontItem['family'],
+					isset($fontItem['category']) ? $fontItem['category'] : '',
+					isset($fontItem['variants']) ? $fontItem['variants'] : array(),
+					isset($fontItem['subsets']) ? $fontItem['subsets'] : array(),
+					$fontItem['files'],
+					$fontSource
+				);
 			}
 		}
 
-		return $themeArray;
+		return $font;
 	}
 
 	/**
@@ -267,8 +314,6 @@ class BackendController extends ActionController {
 	 * @return string
 	 */
 	protected function getHost(){
-		$hostname = '';
-
 		$hostname = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
 
 		/** @var Site $site */
@@ -309,8 +354,6 @@ class BackendController extends ActionController {
 		} else {
 			$themeArray = $themeYamlSettings;
 		}
-
-		$themeArray = $this->addGoogleFonts($themeArray);
 
 		return $themeArray;
 	}

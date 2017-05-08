@@ -1,11 +1,12 @@
 {namespace neos=Neos\Neos\ViewHelpers}
+{namespace cm=CM\Neos\ThemeModule\ViewHelpers}
+
 <div class="neos-content neos-container-fluid">
 
 	<div class="container-fluid">
 		<div class="row">
 			<h1>{neos:backend.translate(id: 'headline', package: 'CM.Neos.ThemeModule')}</h1>
 		</div>
-		
 		<f:form action="update" method="post" class="neos-button-primary" object="{settings}" name="settings">
 
 			<f:for each="{themeSettings}" as="group" key="groupKey">
@@ -41,7 +42,7 @@
 		<div class="column">
 			<div class="group-settings">
 				<f:for each="{group.type}" as="type" key="typeKey">
-					<f:render section="element" arguments="{group: group, typeKey: typeKey, elements: type, groupKey: groupKey}" />
+					<f:render section="element" arguments="{group: group, typeKey: typeKey, elements: type, groupKey: groupKey, fonts: fonts}" />
 				</f:for>
 			</div>
 		</div>
@@ -64,7 +65,7 @@
 		<ul class="default-list font-list">
 			<f:for each="{elements}" as="element" key="elementKey">
 				<f:if condition="{element.value}">
-					<li><f:render section="typeFont" arguments="{element: element, elementKey: elementKey, typeKey: typeKey, groupKey: groupKey}" /></li>
+					<li><f:render section="typeFont" arguments="{element: element, elementKey: elementKey, typeKey: typeKey, groupKey: groupKey, fonts:fonts}" /></li>
 				</f:if>
 			</f:for>
 		</ul>
@@ -95,8 +96,37 @@
 	<div class="form-group">
 		<label for="{elementKey}">{neos:backend.translate(id: 'input.customSettings.{element.label}.label', package: 'CM.Neos.ThemeModule', value: '{element.label}')}</label>
 		<div class="input-group custom-font">
-			<f:form.select name="customSettings[{groupKey}][type][{typeKey}][{elementKey}][value]" id="{elementKey}" class="custom-font-family" options="{element.options}" value="{element.value}" prependOptionLabel="{neos:backend.translate(id: 'select.font.prependOptionLabel', package: 'CM.Neos.ThemeModule')}" />
+			<f:if condition="{fonts.options}">
+				<f:for each="{fonts.options}" as="optionsByCategory" key="optionsByCategoryKey">
+					<f:if condition="{optionsByCategoryKey} == {element.category}">
+						<f:form.select name="customSettings[{groupKey}][type][{typeKey}][{elementKey}][value][family]" data="{category: element.category}" id="{elementKey}" class="cm-neos-thememodule-custom-font-family-selector" options="{optionsByCategory}" optionValueField="family" optionLabelField="family" value="{element.value.family}" prependOptionLabel="{neos:backend.translate(id: 'select.font.prependOptionLabel', package: 'CM.Neos.ThemeModule')}" />
+
+						<div id="{elementKey}-root" class="font-extra-root" data-json-fonts="{optionsByCategory -> f:format.json()}">
+							<f:debug>{element.value.variants -> cm:format.json()}</f:debug>
+							<f:form.hidden name="customSettings[{groupKey}][type][{typeKey}][{elementKey}][value][variants]" class="cm-neos-thememodule-custom-font-family-hidden variants" value="{element.value.variants -> cm:format.json()}" />
+
+							<!-- variants get rendered by js and hidden value get updated -->
+							<div class="variants">
+								<div class="jq-container" data-label="Variants">
+
+								</div>
+							</div>
+
+							<div class="subsets">
+								<div class="jq-container" data-label="Subsets">
+
+								</div>
+							</div>
+						</div>
+					</f:if>
+				</f:for>
+			</f:if>
 		</div>
+
+		<div id="font-style-{elementKey}" class="custom-font-family-style">
+			<!-- ajax request needed -->
+		</div>
+
 	</div>
 </f:section>
 

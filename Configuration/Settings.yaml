@@ -36,6 +36,7 @@ Neos:
                 - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror-scss-linter/scss-lint.js'
                 - 'resource://CM.Neos.ThemeModule/Public/Components/codemirror/mode/css/css.js'
                 - 'resource://CM.Neos.ThemeModule/Public/Components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js'
+                - 'resource://CM.Neos.ThemeModule/Public/JavaScript/fontSelector.js'
                 - 'resource://CM.Neos.ThemeModule/Public/JavaScript/Main.js'
     userInterface:
       requireJsPathMapping:
@@ -47,6 +48,64 @@ Neos:
 CM:
   Neos:
     ThemeModule:
+      # Deactivate possibility to use google fonts
+      addGoogleFonts: true
+
+      # Fonts which are available
+      fontOptions:
+        items:
+          -
+            family: 'Arial Sans Serif Local'
+            category: 'sans-serif'
+            fontSource: FONT_SOURCE_LOCAL
+            variants:
+              - 'regular'
+              - '700'
+              - '700italic'
+            files:
+              - 'resource://CM.Theme.PurpleHeart/Public/Fonts/arial.ttf'
+              - 'resource://CM.Theme.PurpleHeart/Public/Fonts/arial.eot'
+              - 'resource://CM.Theme.PurpleHeart/Public/Fonts/arial.svg'
+              - 'resource://CM.Theme.PurpleHeart/Public/Fonts/arial.woff'
+              - 'resource://CM.Theme.PurpleHeart/Public/Fonts/arial.woff2'
+
+          -
+            family: 'Times New Roman Serif Local'
+            category: 'sans-serif'
+            fontSource: FONT_SOURCE_LOCAL
+            variants:
+              - 'regular'
+              - '700'
+              - '700italic'
+            files:
+              - 'resource://CM.Theme.PurpleHeart/Public/Fonts/arial.ttf'
+              - 'resource://CM.Theme.PurpleHeart/Public/Fonts/arial.eot'
+              - 'resource://CM.Theme.PurpleHeart/Public/Fonts/arial.svg'
+              - 'resource://CM.Theme.PurpleHeart/Public/Fonts/arial.woff'
+              - 'resource://CM.Theme.PurpleHeart/Public/Fonts/arial.woff2'
+
+          -
+            family: 'Helvetica Neue Serif CDN'
+            category: 'serif'
+            fontSource: FONT_SOURCE_CDN
+            files:
+              - 'https://fonts.googleapis.com/css?family=Ravi+Prakash'
+            variants:
+              - '300'
+              - '500'
+              - '500italic'
+
+          -
+            family: 'Inconsolata Monospace CDN'
+            category: 'monospace'
+            fontSource: FONT_SOURCE_CDN
+            files:
+              - 'https://fonts.googleapis.com/css?family=Inconsolata'
+            variants:
+              - '300'
+              - '500'
+              - '500italic'
+
       scss:
         importPaths: 'resource://Vendor.Site.Package/Private/Styles/'
         # Contains all scss rules and @imports to other files
@@ -103,32 +162,33 @@ CM:
             type:
               font:
                 fontFamilySansSerif:
-                  value: 'Times New Roman'
-                  fontFallbackValue: 'Helvetica, Arial, sans-serif'
-                  scssVariableName: '$font-family-sans-serif'
                   label: 'Font Family Sans Serif'
-                  options:
-                    'Arial': 'Arial'
-                    'Helvetica Neue': 'Helvetica Neue'
-                    'Times New Roman': 'Times New Roman'
+                  category: 'sans-serif'
+                  value:
+                    family: 'Arial Sans Serif Local'
+                    variants:
+                      - 'regular'
+                      - '700italic'
+                  fontFallbackValue: 'Helvetica, Arial'
+                  scssVariableName: '$font-family-sans-serif'
 
                 fontFamilySerif:
-                  value: 'Anton'
-                  fontFallbackValue: '"Times New Roman", Times, serif'
-                  scssVariableName: '$font-family-serif'
                   label: 'Font Family Serif'
-                  options:
-                    'Arial': 'Arial'
-                    'Helvetica Neue': 'Helvetica Neue'
-                    'Times New Roman': 'Times New Roman'
+                  category: 'serif'
+                  value:
+                    family: 'Alice'
+                    variants:
+                      - 'regular'
+                  fontFallbackValue: '"Times New Roman", Times'
+                  scssVariableName: '$font-family-serif'
+
                 fontFamilyMonospace:
-                  value: 'Consolas'
-                  fontFallbackValue: 'Monaco, Consolas, "Courier New", monospace'
-                  scssVariableName: '$font-family-monospace'
                   label: 'Font Family Monospace'
-                  options:
-                    'Arial': 'Arial'
-                    'Consolas': 'Consolas'
+                  category: 'monospace'
+                  value:
+                    family: 'Droid Sans Mono'
+                  fontFallbackValue: 'Monaco, Consolas, "Courier New"'
+                  scssVariableName: '$font-family-monospace'
 
               textfield:
                 fontSizeBase:
