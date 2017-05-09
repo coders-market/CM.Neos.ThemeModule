@@ -1,4 +1,4 @@
-CM\Neos\ThemeModule\Controller\BackendController:
+CM\Neos\ThemeModule\Service\Build:
   properties:
     cacheFrontend:
       object:
@@ -6,4 +6,4 @@ CM\Neos\ThemeModule\Controller\BackendController:
         factoryMethodName: getCache
         arguments:
           1:
-            value: CM_Neos_ThemeModule_Controller_BackendController_CacheFrontend
+            value: CM_Neos_ThemeModule_Service_Build_CacheFrontend

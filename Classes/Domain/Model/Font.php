@@ -11,6 +11,7 @@ use Neos\Flow\Annotations as Flow;
  */
 final class Font {
 
+	const FONT_SOURCE_SYSTEM = 'system';
 	const FONT_SOURCE_LOCAL = 'local';
 	const FONT_SOURCE_CDN = 'cdn';
 	const FONT_SOURCE_GOOGLE = 'google';
@@ -32,7 +33,7 @@ final class Font {
 	 * @ORM\Column
 	 * @var string
 	 */
-	public $fontSource = self::FONT_SOURCE_LOCAL;
+	public $fontSource = self::FONT_SOURCE_GOOGLE;
 
 	/**
 	 * @ORM\Column
@@ -53,7 +54,7 @@ final class Font {
 	public $files = array();
 
 
-	public function __construct($family, $category = '', $variants = array(), $subsets = array(), $files, $fontSource = 'FONT_SOURCE_LOCAL') {
+	public function __construct($family, $category = '', $variants = array(), $subsets = array(), $files = array(), $fontSource = 'FONT_SOURCE_GOOGLE') {
 		$this->family = $family;
 		$this->category = $category;
 		$this->variants =$variants;
@@ -110,20 +111,4 @@ final class Font {
 		return $this->files;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getFontLink(): string
-	{
-		$url = '';
-		switch (self::getFontSource()){
-			case 'local':
-				break;
-			case 'cdn':
-				break;
-			case 'google':
-				break;
-		}
-		return $url;
-	}
 }

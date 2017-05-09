@@ -1,0 +1,249 @@
+
+CM:
+  Neos:
+    ThemeModule:
+      # Add google fonts - default true
+      addGoogleFonts: false
+
+      # Fonts which are available
+      fontOptions:
+        items:
+          -
+            family: 'My Local Custom Font'
+            category: 'sans-serif'
+            fontSource: FONT_SOURCE_LOCAL
+            variants:
+              - 'regular'
+              - '700'
+              - '700italic'
+            files:
+              regular:
+                - 'resource://CM.Theme.PurpleHeart/Public/Fonts/arial.ttf'
+                - 'resource://CM.Theme.PurpleHeart/Public/Fonts/arial.woff'
+                - 'resource://CM.Theme.PurpleHeart/Public/Fonts/arial.woff2'
+              700: 'resource://CM.Theme.PurpleHeart/Public/Fonts/arial.eot'
+              700italic: 'resource://CM.Theme.PurpleHeart/Public/Fonts/arial.svg'
+
+
+          -
+            family: 'Georgia'
+            category: 'serif'
+            fontSource: FONT_SOURCE_SYSTEM
+
+          -
+            family: 'Times New Roman'
+            category: 'serif'
+            fontSource: FONT_SOURCE_SYSTEM
+
+
+          -
+            family: 'Arial'
+            category: 'sans-serif'
+            fontSource: FONT_SOURCE_SYSTEM
+
+          -
+            family: 'Arial Black'
+            category: 'sans-serif'
+            fontSource: FONT_SOURCE_SYSTEM
+
+          -
+            family: 'Comic Sans MS'
+            category: 'sans-serif'
+            fontSource: FONT_SOURCE_SYSTEM
+
+          -
+            family: 'Impact'
+            category: 'sans-serif'
+            fontSource: FONT_SOURCE_SYSTEM
+
+          -
+            family: 'Lucida Sans Unicode'
+            category: 'sans-serif'
+            fontSource: FONT_SOURCE_SYSTEM
+
+          -
+            family: 'Tahoma'
+            category: 'sans-serif'
+            fontSource: FONT_SOURCE_SYSTEM
+
+          -
+            family: 'Trebuchet MS'
+            category: 'sans-serif'
+            fontSource: FONT_SOURCE_SYSTEM
+
+          -
+            family: 'Verdana'
+            category: 'sans-serif'
+            fontSource: FONT_SOURCE_SYSTEM
+
+
+          -
+            family: 'Courier New'
+            category: 'monospace'
+            fontSource: FONT_SOURCE_SYSTEM
+
+          -
+            family: 'Lucida Console'
+            category: 'monospace'
+            fontSource: FONT_SOURCE_SYSTEM
+
+
+          # Fonts from e.g. fonts.com, linotype, adobe, ... which are using a <link> tag
+          # to include the font on your page.
+          # If the font is added via JS or any other methode use the "FONT_SOURCE_SYSTEM" to
+          # add the font and add your css/js by your self
+          -
+            family: 'Custom Font from CDN'
+            category: 'serif'
+            fontSource: FONT_SOURCE_CDN
+            variants:
+              - 'regular'
+            files:
+              regular: '//your.custom-font-cdn.tld/css?family=the+font+family'
+
+
+      scss:
+        importPaths: 'resource://Vendor.Site.Package/Private/Styles/'
+        # Contains all scss rules and @imports to other files
+        mainScssFile: 'Main.scss'
+        # Expanded, Nested (default), Compressed, Compact, Crunched
+        formatter: 'Leafo\ScssPhp\Formatter\Nested'
+        # Output path has to be in Package Public folder
+        outputPath: 'resource://Vendor.Site.Package/Public/Styles/'
+        outputFilename: 'Main.css'
+
+        # Define your default scss variable value
+        # You can add/remove values to this list
+        # The order: BE module values, Settings.yaml values, scss file defined value
+        # The following is based on Bootstrap 3.x adapt to your needs
+
+        # Your scss variables which should be customizeable in the BE module
+         # Add/remove to your needs
+         # Valid types: textfield, color, font
+        presetVariables:
+          color: # group
+            label: 'Your Color Settings'
+            type:
+              color:
+                greyBase:
+                  value: '#000000'
+                  scssVariableName: '$grey-base'
+                  label: 'Grey Base'
+                bodyBgColor:
+                  value: '#ffffff'
+                  scssVariableName: '$body-bg'
+                  label: 'Background Color'
+                brandPrimaryColor:
+                  value: '#e64442'
+                  scssVariableName: '$brand-primary'
+                  label: 'Primary Brand Color'
+                brandSuccessColor:
+                  value: '#00f00'
+                  scssVariableName: '$brand-success'
+                  label: 'Brand Success Color'
+                brandInfoColor:
+                  value: '#666666'
+                  scssVariableName: '$brand-info'
+                  label: 'Brand Info Color'
+                brandWarningColor:
+                  value: '#00f0f0'
+                  scssVariableName: '$brand-warning'
+                  label: 'Brand Warning Color'
+                brandDangerColor:
+                  value: '#ff0000'
+                  scssVariableName: '$brand-danger'
+                  label: 'Brand Danger Color'
+          font:
+            label: 'Your Font Settings'
+            type:
+              font:
+                fontFamilySansSerif:
+                  label: 'Font Family Sans Serif'
+                  category: 'sans-serif'
+                  value:
+                    family: 'Arial'
+                  fontFallbackValue: 'Helvetica, sans-serif'
+                  scssVariableName: '$font-family-sans-serif'
+
+                fontFamilySerif:
+                  label: 'Font Family Serif'
+                  category: 'serif'
+                  value:
+                    family: 'Custom Font from CDN'
+                    variants:
+                      - 'regular'
+                  fontFallbackValue: '"Times New Roman", Times, serif'
+                  scssVariableName: '$font-family-serif'
+
+                fontFamilyMonospace:
+                  label: 'Font Family Monospace'
+                  category: 'monospace'
+                  value:
+                    family: 'Droid Sans Mono'
+                  fontFallbackValue: 'Monaco, Consolas, "Courier New"'
+                  scssVariableName: '$font-family-monospace'
+
+              textfield:
+                fontSizeBase:
+                  value: '14px'
+                  scssVariableName: '$font-size-base'
+                  label: 'Base Font Size in px'
+                headingsFontWeight:
+                  value: '500'
+                  scssVariableName: '$headings-font-weight'
+                  label: 'Headings Font Weight'
+
+          button:
+            label: 'Your Button Settings'
+            type:
+              color:
+                btnDefaultColor:
+                  value: '#333'
+                  scssVariableName: '$btn-default-color'
+                  label: 'Default Button Color'
+                btnDefaultBgColor:
+                  value: '#fff'
+                  scssVariableName: '$btn-default-bg'
+                  label: 'Default Button Background Color'
+                btnDefaultBorder:
+                  value: '#ccc'
+                  scssVariableName: '$btn-default-border'
+                  label: 'Default Button Border Color'
+
+                btnPrimaryColor:
+                  value: '#fff'
+                  scssVariableName: '$btn-primary-color'
+                  label: 'Primary Button Color'
+                btnSuccessColor:
+                  value: '#fff'
+                  scssVariableName: '$btn-success-color'
+                  label: 'Success Button Color'
+                btnInfoColor:
+                  value: '#fff'
+                  scssVariableName: '$btn-info-color'
+                  label: 'Info Button Color'
+                btnWarningColor:
+                  value: '#fff'
+                  scssVariableName: '$btn-warning-color'
+                  label: 'Warning Button Color'
+                btnDangerColor:
+                  value: '#333'
+                  scssVariableName: '$btn-danger-color'
+                  label: 'Danger Button Color'
+
+          radius:
+            label: 'Your Border Radius Settings'
+            type:
+              textfield:
+                borderRadiusBase:
+                  value: '4px'
+                  scssVariableName: '$border-radius-base'
+                  label: 'Border Radius Base'
+                borderRadiusLarge:
+                  value: '6px'
+                  scssVariableName: '$border-large-large'
+                  label: 'Border Radius Large'
+                borderRadiusSmall:
+                  value: '3px'
+                  scssVariableName: '$border-radius-small'
+                  label: 'Border Radius Small'

@@ -6,13 +6,22 @@
                 <source>Theme Settings</source>
             </trans-unit>
             <trans-unit id="button.save">
-      				  <source>Save Changes</source>
-      			</trans-unit>
+                <source>Save Changes</source>
+            </trans-unit>
             <trans-unit id="select.font.label">
                 <source>Select your font</source>
             </trans-unit>
             <trans-unit id="select.font.prependOptionLabel">
                 <source>Theme default selected</source>
+            </trans-unit>
+            <trans-unit id="select.font.fontFallbackValue">
+                <source>Font fallback</source>
+            </trans-unit>
+            <trans-unit id="select.font.variants">
+                <source>Font variants</source>
+            </trans-unit>
+            <trans-unit id="select.font.subsets">
+                <source>Font subsets</source>
             </trans-unit>
             <trans-unit id="textarea.scss.label">
                 <source>Your custom scss code to append: (Press Ctrl+Space for code completion)</source>

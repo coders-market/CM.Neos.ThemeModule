@@ -95,10 +95,9 @@ $( document ).ready(function () {
 
             fonts[selectCategory] = JSON.parse(_$selectedCategoryJsonFontElement.attr('data-json-fonts'));
 
-            var variants = JSON.parse(_$selectedCategoryJsonFontElement.find('.variants').val());
-
-            if( !((!!variants) && (variants.constructor === Object)) && !((!!variants) && (variants.constructor === Array))){
-                variants = JSON.parse(variants);
+            var variantsJson = _$selectedCategoryJsonFontElement.find('.variants').val();
+            if(variantsJson !== 'null' && variantsJson !== null && typeof variantsJson !== 'undefined' && variantsJson.length > 4) {
+                var variants = JSON.parse(variantsJson);
             }
 
             var savedValue = {

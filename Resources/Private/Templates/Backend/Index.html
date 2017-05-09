@@ -85,35 +85,42 @@
 
 <f:section name="typeColor">
 	<div class="form-group">
-		<label for="{elementKey}">{neos:backend.translate(id: 'input.customSettings.{element.label}.label', package: 'CM.Neos.ThemeModule', value: '{element.label}')}</label>
+		<label class="cm-neos-thememodule-headline" for="{elementKey}">{neos:backend.translate(id: 'input.customSettings.{element.label}.label', package: 'CM.Neos.ThemeModule', value: '{element.label}')}</label>
 		<div class="input-group colorpicker-component custom-color">
 			<f:form.textfield name="customSettings[{groupKey}][type][{typeKey}][{elementKey}][value]" id="{elementKey}" class="form-control" value="{element.value}" /><span class="input-group-addon"><i></i></span>
 		</div>
+		<f:form.hidden name="customSettings[{groupKey}][type][{typeKey}][{elementKey}][scssVariableName]" value="{element.scssVariableName}" />
 	</div>
 </f:section>
 
 <f:section name="typeFont">
 	<div class="form-group">
-		<label for="{elementKey}">{neos:backend.translate(id: 'input.customSettings.{element.label}.label', package: 'CM.Neos.ThemeModule', value: '{element.label}')}</label>
+		<label class="cm-neos-thememodule-headline" for="{elementKey}">{neos:backend.translate(id: 'input.customSettings.{element.label}.label', package: 'CM.Neos.ThemeModule', value: '{element.label}')}</label>
 		<div class="input-group custom-font">
 			<f:if condition="{fonts.options}">
 				<f:for each="{fonts.options}" as="optionsByCategory" key="optionsByCategoryKey">
 					<f:if condition="{optionsByCategoryKey} == {element.category}">
-						<f:form.select name="customSettings[{groupKey}][type][{typeKey}][{elementKey}][value][family]" data="{category: element.category}" id="{elementKey}" class="cm-neos-thememodule-custom-font-family-selector" options="{optionsByCategory}" optionValueField="family" optionLabelField="family" value="{element.value.family}" prependOptionLabel="{neos:backend.translate(id: 'select.font.prependOptionLabel', package: 'CM.Neos.ThemeModule')}" />
+
+						<f:form.select name="customSettings[{groupKey}][type][{typeKey}][{elementKey}][value][family]" data="{category: element.category}" id="{elementKey}" class="cm-neos-thememodule-custom-font-family-selector" options="{optionsByCategory}" optionValueField="family" optionLabelField="family" value="{element.value.family}" />
+						<f:form.hidden name="customSettings[{groupKey}][type][{typeKey}][{elementKey}][scssVariableName]" class="form-control" value="{element.scssVariableName}" />
+
+						<div class="input-group custom-textfield font-fallback-value">
+							<label>{neos:backend.translate(id: 'select.font.fontFallbackValue', package: 'CM.Neos.ThemeModule')}</label>
+							<f:form.textfield name="customSettings[{groupKey}][type][{typeKey}][{elementKey}][fontFallbackValue]" class="form-control" value="{element.fontFallbackValue}" />
+						</div>
 
 						<div id="{elementKey}-root" class="font-extra-root" data-json-fonts="{optionsByCategory -> f:format.json()}">
-							<f:debug>{element.value.variants -> cm:format.json()}</f:debug>
 							<f:form.hidden name="customSettings[{groupKey}][type][{typeKey}][{elementKey}][value][variants]" class="cm-neos-thememodule-custom-font-family-hidden variants" value="{element.value.variants -> cm:format.json()}" />
 
 							<!-- variants get rendered by js and hidden value get updated -->
 							<div class="variants">
-								<div class="jq-container" data-label="Variants">
+								<div class="jq-container" data-label="{neos:backend.translate(id: 'select.font.variants', package: 'CM.Neos.ThemeModule')}">
 
 								</div>
 							</div>
 
 							<div class="subsets">
-								<div class="jq-container" data-label="Subsets">
+								<div class="jq-container" data-label="{neos:backend.translate(id: 'select.font.subsets', package: 'CM.Neos.ThemeModule')}">
 
 								</div>
 							</div>
@@ -122,19 +129,15 @@
 				</f:for>
 			</f:if>
 		</div>
-
-		<div id="font-style-{elementKey}" class="custom-font-family-style">
-			<!-- ajax request needed -->
-		</div>
-
 	</div>
 </f:section>
 
 <f:section name="typeTextfield">
 	<div class="form-group">
-		<label for="{elementKey}">{neos:backend.translate(id: 'input.customSettings.{element.label}.label', package: 'CM.Neos.ThemeModule', value: '{element.label}')}</label>
+		<label class="cm-neos-thememodule-headline" for="{elementKey}">{neos:backend.translate(id: 'input.customSettings.{element.label}.label', package: 'CM.Neos.ThemeModule', value: '{element.label}')}</label>
 		<div class="input-group custom-textfield">
 			<f:form.textfield name="customSettings[{groupKey}][type][{typeKey}][{elementKey}][value]" id="{elementKey}" class="form-control" value="{element.value}" />
 		</div>
+		<f:form.hidden name="customSettings[{groupKey}][type][{typeKey}][{elementKey}][scssVariableName]" value="{element.scssVariableName}" />
 	</div>
 </f:section>

@@ -1,0 +1,14 @@
+prototype(CM.Neos.ThemeModule:Font){
+    @class = 'CM\\Neos\\ThemeModule\\Fusion\\FontImplementation'
+    url = ''
+    variants = ''
+    subsets = ''
+    fontSource = 'FONT_SOURCE_GOOGLE'
+}
+
+prototype(Neos.Neos:Page) {
+    head.cmfont = CM.Neos.ThemeModule:Font
+    head.cmfont {
+        @position = 'after titleTag'
+    }
+}
