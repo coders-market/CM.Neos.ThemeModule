@@ -26,7 +26,7 @@ This packages allows you to customize your theme package in a backend module.
 
 ## Getting Started
 
-1) Add `"cm/neos-thememodule": "^3.0"` to your site `composer.json`
+1) Add `"cm/neos-thememodule": "^3.0"` to your `composer.json` site package
 2) Run `composer update`
 3) Run `./flow doctrine:migrate`
 
@@ -189,7 +189,7 @@ There are four fontSource types:
 Depending on the selected fontSource, the font get added to your CSS via @font-face rule (FONT_SOURCE_LOCAL) 
 or a <link> tag get added to your `prototype(Neos.Neos:Page)` in `head.cmfont` for types FONT_SOURCE_CDN and FONT_SOURCE_GOOGLE 
 
-Configuration for a FONT_SOURCE_SYSTEM:
+**_Configuration for a FONT_SOURCE_SYSTEM:_**
 
 ```
   # a system font
@@ -199,7 +199,7 @@ Configuration for a FONT_SOURCE_SYSTEM:
     fontSource: FONT_SOURCE_SYSTEM
 ```
 
-Configuration for a FONT_SOURCE_LOCAL:
+_**Configuration for a FONT_SOURCE_LOCAL:**_
 
 ```
   # a local font
@@ -220,7 +220,7 @@ Configuration for a FONT_SOURCE_LOCAL:
       700italic: 'resource://CM.Theme.PurpleHeart/Public/Fonts/my-font-700-italic.woff2'
 ```
 
-Configuration for a FONT_SOURCE_CDN:
+**_Configuration for a FONT_SOURCE_CDN:_**
 ```
   # Fonts from e.g. fonts.com, linotype, adobe, ... if they are using a <link> tag
   # to include the font on your page.
