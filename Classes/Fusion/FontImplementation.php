@@ -31,7 +31,7 @@ class FontImplementation extends AbstractFusionObject {
 	public function evaluate() {
 
 		$settings = $this->buildService->buildThemeSettings();
-		$fontSettings = $settings['font']['type']['font'];
+		$fontSettings = isset($settings['font']['type']['font']) ? $settings['font']['type']['font'] : array();
 		$fonts = $this->buildService->buildFontOptions();
 
 		$externalFonts = [];

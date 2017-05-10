@@ -92,9 +92,11 @@ class Build
 		if(count($dbSettings) > 0 && $dbSettings->getCustomSettings()) {
 
 			$dbCustomSettings = json_decode($dbSettings->getCustomSettings(), true);
-			$themeArray = array_replace_recursive($themeYamlSettings,$dbCustomSettings);
+			$themeArray = isset($themeYamlSettings) && is_array($themeYamlSettings)
+							&& isset($dbCustomSettings) && is_array($dbCustomSettings)
+								? array_replace_recursive($themeYamlSettings,$dbCustomSettings) : array();
 		} else {
-			$themeArray = $themeYamlSettings;
+			$themeArray = isset($themeYamlSettings) && is_array($themeYamlSettings) ? $themeYamlSettings : array();
 		}
 
 		return $themeArray;
