@@ -1,7 +1,0 @@
-Resources/Public/Components/ linguist-vendored
-Resources/Public/Components/* linguist-vendored
-Resources/Public/Components/** linguist-vendored
-Resources/Public/Components linguist-vendored
-Resources/Public/Components/bootstrap-colorpicker/src/js/* linguist-vendored
-Resources/Public/Components/codemirror-scss-linter/* linguist-vendored
-Resources/Public/Components/codemirror/src/**/* linguist-vendored
