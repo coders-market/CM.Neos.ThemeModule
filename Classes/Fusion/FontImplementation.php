@@ -42,7 +42,7 @@ class FontImplementation extends AbstractFusionObject {
 
 			// Check if at least one font variant is available
 			$variantsArray = json_decode($fontSetting['value']['variants']);
-			if (isset($variantsArray) && is_array($variantsArray) && count($variantsArray) > 0) {
+			if (isset($variantsArray) && is_array($variantsArray) && count($variantsArray) > 0 && isset($font)) {
 
 				switch ($font) {
 					case ($font->getFontSource() === Font::FONT_SOURCE_GOOGLE):
