@@ -113,7 +113,7 @@ class Build
 			$settingsFont = $this->parseFonts($this->configuration['fontOptions']);
 		}
 
-		if(isset($this->configuration['addGoogleFonts']) && $this->configuration['addGoogleFonts'] !== false) {
+		if(!isset($this->configuration['addGoogleFonts']) || $this->configuration['addGoogleFonts'] === true) {
 			$googleFonts = $this->parseFonts($this->getGoogleWebfonts(), 'FONT_SOURCE_GOOGLE');
 		}
 
