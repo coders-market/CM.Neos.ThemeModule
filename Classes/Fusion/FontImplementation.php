@@ -32,7 +32,7 @@ class FontImplementation extends AbstractFusionObject {
 
 		$settings = $this->buildService->buildThemeSettings();
 
-		if(isset($settings['font']['type']['font']) && is_array($settings['font']['type']['font']) || count($settings['font']['type']['font']) > 0){
+		if(isset($settings['font']['type']['font']) && is_array($settings['font']['type']['font']) && count($settings['font']['type']['font']) > 0){
 			$fontSettings =  $settings['font']['type']['font'];
 		} else {
 			return null;
