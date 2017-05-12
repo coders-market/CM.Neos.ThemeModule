@@ -47,11 +47,22 @@ class FontImplementation extends AbstractFusionObject {
 		$externalFonts = [];
 
 		foreach ($fontSettings as $fontSetting) {
+			if(!isset($fontSetting['value']['family'])){
+				continue;
+			}
+
 			/** @var Font $font */
 			$font = $this->compileService->findFontByName($fontSetting['value']['family'], $fonts);
 
+			if (!isset($font) || $font->getFontSource() == Font::FONT_SOURCE_SYSTEM || $font->getFontSource() == Font::FONT_SOURCE_LOCAL) {
+				continue;
+			}
+
 			// Check if at least one font variant is available
-			$variantsArray = json_decode($fontSetting['value']['variants']);
+			if (isset($fontSetting['value']['variants']) && !is_array($fontSetting['value']['variants'])) {
+				$variantsArray = json_decode($fontSetting['value']['variants']);
+			}
+
 			if (isset($variantsArray) && is_array($variantsArray) && count($variantsArray) > 0 && isset($font)) {
 
 				switch ($font) {
