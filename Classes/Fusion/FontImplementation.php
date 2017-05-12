@@ -59,7 +59,7 @@ class FontImplementation extends AbstractFusionObject {
 			}
 
 			// Check if at least one font variant is available
-			if (isset($fontSetting['value']['variants']) && !is_array($fontSetting['value']['variants'])) {
+			if (isset($fontSetting['value']['variants']) && is_string($fontSetting['value']['variants'])) {
 				$variantsArray = json_decode($fontSetting['value']['variants']);
 			}
 
