@@ -13,7 +13,7 @@ This packages allows you to customize your theme package in a backend module.
 * No dependencies to sass compiler libraries
 * Additonal Viewhelper
 * Support for google webfonts
-* Add any font (local, CDN, Google Wegfont)
+* Add any font (local, CDN, Google Webfont)
 
 ![Theme Settings Screenshot 1](Documentation/Neos-Theme-Module.jpg)
 ![Theme Settings Screenshot 2](Documentation/Neos-Theme-Module2.jpg)
