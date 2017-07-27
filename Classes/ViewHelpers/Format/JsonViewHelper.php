@@ -65,7 +65,8 @@ class JsonViewHelper extends AbstractViewHelper
      */
     public function render($value = null, $forceObject = false)
     {
-        return self::renderStatic(array('value' => $value, 'forceObject' => $forceObject), $this->buildRenderChildrenClosure(), $this->renderingContext);
+        return self::renderStatic(array('value' => $value, 'forceObject' => $forceObject),
+            $this->buildRenderChildrenClosure(), $this->renderingContext);
     }
 
     /**
@@ -76,21 +77,24 @@ class JsonViewHelper extends AbstractViewHelper
      * @param RenderingContextInterface $renderingContext
      * @return string
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
-    {
-		$value = $arguments['value'];
+    public static function renderStatic(
+        array $arguments,
+        \Closure $renderChildrenClosure,
+        RenderingContextInterface $renderingContext
+    ) {
+        $value = $arguments['value'];
 
-		if ($value === null) {
-			$value = $renderChildrenClosure();
-		}
+        if ($value === null) {
+            $value = $renderChildrenClosure();
+        }
 
-		if (is_string($value)) {
-			return $value;
-		}
-		$options = JSON_HEX_TAG;
-		if ($arguments['forceObject'] !== false) {
-			$options = $options | JSON_FORCE_OBJECT;
-		}
+        if (is_string($value)) {
+            return $value;
+        }
+        $options = JSON_HEX_TAG;
+        if ($arguments['forceObject'] !== false) {
+            $options = $options | JSON_FORCE_OBJECT;
+        }
 
         return json_encode($value, $options);
     }
