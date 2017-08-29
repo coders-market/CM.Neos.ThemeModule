@@ -11,15 +11,17 @@ use Neos\Flow\Persistence\Doctrine\Repository;
  *
  * @Flow\Scope("singleton")
  */
-class SettingsRepository extends Repository {
+class SettingsRepository extends Repository
+{
 
-	/**
-	 * Finds the active theme settings
-	 *
-	 * @return Settings The active theme settings or FALSE if none exists
-	 */
-	public function findActive() {
-		$query = $this->createQuery();
-		return $query->execute()->getFirst();
-	}
+    /**
+     * Finds the active theme settings
+     *
+     * @return Settings The active theme settings or FALSE if none exists
+     */
+    public function findActive()
+    {
+        $query = $this->createQuery();
+        return $query->execute()->getFirst();
+    }
 }
