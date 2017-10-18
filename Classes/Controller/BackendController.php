@@ -1,13 +1,23 @@
 <?php
 namespace CM\Neos\ThemeModule\Controller;
 
+/*
+ * This file is part of the CM.Neos.ThemeModule package.
+ *
+ * (c) 2017, Alexander Kappler
+ *
+ * This package is Open Source Software. For the full copyright and license
+ * information, please view the LICENSE file which was distributed with this
+ * source code.
+ */
+
+use CM\Neos\ThemeModule\Domain\Model\Settings;
+use CM\Neos\ThemeModule\Domain\Repository\SettingsRepository;
 use CM\Neos\ThemeModule\Service\Build;
 use CM\Neos\ThemeModule\Service\Compile;
 use Neos\Flow\Annotations as Flow;
-use Neos\Flow\Cache\CacheManager;
 use Neos\Flow\Mvc\Controller\ActionController;
-use CM\Neos\ThemeModule\Domain\Model\Settings;
-use CM\Neos\ThemeModule\Domain\Repository\SettingsRepository;
+use Neos\Fusion\Core\Cache\ContentCache;
 
 class BackendController extends ActionController
 {
@@ -27,16 +37,18 @@ class BackendController extends ActionController
      * @Flow\Inject
      * @var Compile
      */
-    protected $compile;
+    protected $compileService;
 
     /**
      * @Flow\Inject
-     * @var CacheManager
+     * @var ContentCache
      */
-    protected $cacheManager;
+    protected $contentCache;
 
     /**
      * Default index action
+     *
+     * @return void
      */
     public function indexAction()
     {
@@ -51,11 +63,11 @@ class BackendController extends ActionController
 
         $fonts = $this->buildService->buildFontOptions();
 
-        $this->view->assignMultiple(array(
+        $this->view->assignMultiple([
             'settings' => $activeSettings,
             'themeSettings' => $themeSettings,
             'fonts' => $fonts
-        ));
+        ]);
     }
 
     /**
@@ -63,10 +75,11 @@ class BackendController extends ActionController
      *
      * @param Settings $settings Custom theme setting object
      * @param array $customSettings Custom settings for the theme
+     * @return void
      */
-    public function updateAction(Settings $settings, $customSettings = array())
+    public function updateAction(Settings $settings, array $customSettings = [])
     {
-        $settings->setCustomSettings(json_encode($customSettings));
+        $settings->setCustomSettings($customSettings);
 
         if ($settings instanceof Settings && $this->persistenceManager->isNewObject($settings)) {
             $this->settingsRepository->add($settings);
@@ -74,16 +87,16 @@ class BackendController extends ActionController
             $this->settingsRepository->update($settings);
         }
 
-        $this->compile->compileScss($settings, $customSettings);
+        $this->compileService->compileScss($settings);
 
-        // Make sure all page caches get flushed
-        $this->cacheManager->flushCachesByTag('DescendantOf_' . strtr('Neos.Neos:Page', '.:', '_-'), true);
-        $this->cacheManager->flushCachesByTag('DescendantOf_' . strtr('Neos.NodeTypes:Page', '.:', '_-'), true);
-        $this->cacheManager->flushCachesByTag('DescendantOf_' . strtr('Neos.Neos:Document', '.:', '_-'), true);
+        // Make sure all page caches get flushed, in case font settings were changed and CM.Neos.ThemeModule:Font is in use.
+        $this->contentCache->flushByTag('DescendantOf_Neos.Neos:Page');
+        $this->contentCache->flushByTag('DescendantOf_Neos.NodeTypes:Page');
+        $this->contentCache->flushByTag('DescendantOf_Neos.Neos:Document');
 
-        $this->cacheManager->flushCachesByTag('NodeType_' . strtr('Neos.Neos:Page', '.:', '_-'), true);
-        $this->cacheManager->flushCachesByTag('NodeType_' . strtr('Neos.NodeTypes:Page', '.:', '_-'), true);
-        $this->cacheManager->flushCachesByTag('NodeType_' . strtr('Neos.Neos:Document', '.:', '_-'), true);
+        $this->contentCache->flushByTag('NodeType_Neos.Neos:Page');
+        $this->contentCache->flushByTag('NodeType_Neos.NodeTypes:Page');
+        $this->contentCache->flushByTag('NodeType_Neos.Neos:Document');
 
         $this->redirect('index');
     }

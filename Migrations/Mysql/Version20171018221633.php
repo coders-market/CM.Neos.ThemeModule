@@ -5,16 +5,16 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Set up initial table structure
+ * Adjust schema to code cleanup
  */
-class Version20170418223039 extends AbstractMigration
+class Version20171018221633 extends AbstractMigration
 {
     /**
      * @return string
      */
     public function getDescription()
     {
-        return 'Set up initial table structure';
+        return 'Adjust schema to code cleanup';
     }
 
     /**
@@ -25,7 +25,7 @@ class Version20170418223039 extends AbstractMigration
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'mysql', 'Migration can only be executed safely on "mysql".');
 
-        $this->addSql('CREATE TABLE cm_neos_thememodule_domain_model_settings (persistence_object_identifier VARCHAR(40) NOT NULL, customscss LONGTEXT DEFAULT NULL, customcss LONGTEXT DEFAULT NULL, customsettings LONGTEXT DEFAULT NULL, PRIMARY KEY(persistence_object_identifier)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE cm_neos_thememodule_domain_model_settings CHANGE customscss customscss LONGTEXT NOT NULL, CHANGE customcss customcss LONGTEXT NOT NULL, CHANGE customsettings customsettings LONGTEXT NOT NULL');
     }
 
     /**
@@ -36,6 +36,6 @@ class Version20170418223039 extends AbstractMigration
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'mysql', 'Migration can only be executed safely on "mysql".');
 
-        $this->addSql('DROP TABLE cm_neos_thememodule_domain_model_settings');
+        $this->addSql('ALTER TABLE cm_neos_thememodule_domain_model_settings CHANGE customscss customscss LONGTEXT DEFAULT NULL, CHANGE customcss customcss LONGTEXT DEFAULT NULL, CHANGE customsettings customsettings LONGTEXT DEFAULT NULL');
     }
 }

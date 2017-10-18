@@ -1,6 +1,16 @@
 <?php
 namespace CM\Neos\ThemeModule\Fusion;
 
+/*
+ * This file is part of the CM.Neos.ThemeModule package.
+ *
+ * (c) 2017, Alexander Kappler
+ *
+ * This package is Open Source Software. For the full copyright and license
+ * information, please view the LICENSE file which was distributed with this
+ * source code.
+ */
+
 use CM\Neos\ThemeModule\Domain\Model\Font;
 use CM\Neos\ThemeModule\Service\Build;
 use CM\Neos\ThemeModule\Service\Compile;
@@ -9,7 +19,6 @@ use Neos\Fusion\FusionObjects\AbstractFusionObject;
 
 class FontImplementation extends AbstractFusionObject
 {
-
     const GOOGLE_WEBFONT_API = '//fonts.googleapis.com/css';
 
     /**
@@ -31,7 +40,6 @@ class FontImplementation extends AbstractFusionObject
      */
     public function evaluate()
     {
-
         $settings = $this->buildService->buildThemeSettings();
 
         if (isset($settings['font']['type']['font']) && is_array($settings['font']['type']['font']) && count($settings['font']['type']['font']) > 0) {
@@ -70,16 +78,15 @@ class FontImplementation extends AbstractFusionObject
                 switch ($font) {
                     case ($font->getFontSource() === Font::FONT_SOURCE_GOOGLE):
                         $externalFonts['google'][$fontSetting['value']['family']]['settings'] = $fontSetting;
-                        break;
+                    break;
 
                     case ($font->getFontSource() === Font::FONT_SOURCE_CDN):
                         $externalFonts['cdn'][$fontSetting['value']['family']]['font'] = $font;
                         $externalFonts['cdn'][$fontSetting['value']['family']]['settings'] = $fontSetting;
-                        break;
+                    break;
 
                     default:
                 }
-
             }
         }
 
@@ -88,12 +95,10 @@ class FontImplementation extends AbstractFusionObject
         return $html;
     }
 
-
     /**
      * Return the <link> tag for the given font
      *
      * @param array $externalFonts
-     *
      * @return string
      */
     private function getFontLinkTag(array $externalFonts)
@@ -102,7 +107,7 @@ class FontImplementation extends AbstractFusionObject
 
         if (isset($externalFonts['cdn']) && count($externalFonts['cdn']) > 0) {
             foreach ($externalFonts['cdn'] as $cdnFontLink) {
-                $link .= $this->cdnLinkTag($cdnFontLink['font'], array('regular'));
+                $link .= $this->cdnLinkTag($cdnFontLink['font'], ['regular']);
             }
         }
 
@@ -118,12 +123,10 @@ class FontImplementation extends AbstractFusionObject
      *
      * @param Font $font The font which should be added
      * @param array $variants cdn Font link can only contain one href url (cdn path)
-     *
      * @return string
      */
     private function cdnLinkTag(Font $font, array $variants)
     {
-
         $link = '<link rel="stylesheet" href="';
         foreach ($font->getFiles() as $fileKey => $file) {
             if ($fileKey === $variants[0]) {
@@ -167,5 +170,4 @@ class FontImplementation extends AbstractFusionObject
 
         return $link;
     }
-
 }

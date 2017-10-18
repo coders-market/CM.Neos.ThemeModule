@@ -2,9 +2,9 @@
 namespace CM\Neos\ThemeModule\ViewHelpers\Format;
 
 /*
- * This file is part of the Neos.FluidAdaptor package.
+ * This file is part of the CM.Neos.ThemeModule package.
  *
- * (c) Contributors of the Neos Project - www.neos.io
+ * (c) 2017, Alexander Kappler
  *
  * This package is Open Source Software. For the full copyright and license
  * information, please view the LICENSE file which was distributed with this
@@ -65,8 +65,11 @@ class JsonViewHelper extends AbstractViewHelper
      */
     public function render($value = null, $forceObject = false)
     {
-        return self::renderStatic(array('value' => $value, 'forceObject' => $forceObject),
-            $this->buildRenderChildrenClosure(), $this->renderingContext);
+        return self::renderStatic(
+            ['value' => $value, 'forceObject' => $forceObject],
+            $this->buildRenderChildrenClosure(),
+            $this->renderingContext
+        );
     }
 
     /**
@@ -77,11 +80,8 @@ class JsonViewHelper extends AbstractViewHelper
      * @param RenderingContextInterface $renderingContext
      * @return string
      */
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ) {
+    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    {
         $value = $arguments['value'];
 
         if ($value === null) {
