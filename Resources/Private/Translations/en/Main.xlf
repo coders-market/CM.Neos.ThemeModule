@@ -5,6 +5,9 @@
             <trans-unit id="headline">
                 <source>Theme Settings</source>
             </trans-unit>
+            <trans-unit id="select.targetPackage.label">
+                <source>Target package</source>
+            </trans-unit>
             <trans-unit id="button.save">
                 <source>Save Changes</source>
             </trans-unit>

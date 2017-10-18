@@ -99,28 +99,26 @@ class Build
 
     /**
      * Build Theme Settings based on Settings.yaml and custom values
+     * Merging scss with site-specific settings (if any).
      *
+     * @param string $packageKey
      * @return array
      */
-    public function buildThemeSettings()
+    public function buildThemeSettings($packageKey)
     {
-        // Get all settings from yaml
-        $themeYamlSettings = $this->configuration['scss']['presetVariables'];
+        $globalConfiguration = $this->configuration['scss'];
+        $siteConfiguration = [];
 
-        /** @var Settings $dbSettings */
-        $dbSettings = $this->settingsRepository->findActive();
-
-        if ($dbSettings->getCustomSettings()) {
-
-            $dbCustomSettings = $dbSettings->getCustomSettings();
-            $themeArray = isset($themeYamlSettings) && is_array($themeYamlSettings)
-            && isset($dbCustomSettings) && is_array($dbCustomSettings)
-                ? array_replace_recursive($themeYamlSettings, $dbCustomSettings) : array();
-        } else {
-            $themeArray = isset($themeYamlSettings) && is_array($themeYamlSettings) ? $themeYamlSettings : array();
+        if (isset($this->configuration['sites'], $this->configuration['sites'][$packageKey])) {
+            $siteConfiguration = $this->configuration['sites'][$packageKey];
         }
 
-        return $themeArray;
+        $mergedConfiguration = Arrays::arrayMergeRecursiveOverrule($globalConfiguration, $siteConfiguration);
+
+        $mergedConfiguration['importPaths'] = str_replace('{packageKey}', $packageKey, $mergedConfiguration['importPaths']);
+        $mergedConfiguration['outputPath'] = str_replace('{packageKey}', $packageKey, $mergedConfiguration['outputPath']);
+
+        return $mergedConfiguration;
     }
 
     /**

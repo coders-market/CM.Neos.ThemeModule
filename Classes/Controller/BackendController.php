@@ -15,9 +15,13 @@ use CM\Neos\ThemeModule\Domain\Model\Settings;
 use CM\Neos\ThemeModule\Domain\Repository\SettingsRepository;
 use CM\Neos\ThemeModule\Service\Build;
 use CM\Neos\ThemeModule\Service\Compile;
+use CM\Neos\ThemeModule\Service\Request;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\ActionController;
+use Neos\Flow\Package\PackageManagerInterface;
+use Neos\Flow\Persistence\PersistenceManagerInterface;
 use Neos\Fusion\Core\Cache\ContentCache;
+use Neos\Utility\ObjectAccess;
 
 class BackendController extends ActionController
 {
@@ -26,6 +30,12 @@ class BackendController extends ActionController
      * @var SettingsRepository
      */
     protected $settingsRepository;
+
+    /**
+     * @Flow\Inject
+     * @var Request
+     */
+    protected $requestService;
 
     /**
      * @Flow\Inject
@@ -46,26 +56,46 @@ class BackendController extends ActionController
     protected $contentCache;
 
     /**
+     * @Flow\Inject
+     * @var PackageManagerInterface
+     */
+    protected $packageManager;
+
+    /**
+     * @Flow\Inject
+     * @var PersistenceManagerInterface
+     */
+    protected $persistenceManager;
+
+    /**
      * Default index action
      *
+     * @param string $targetPackageKey
      * @return void
      */
-    public function indexAction()
+    public function indexAction($targetPackageKey = '')
     {
-        /** @var Settings $dbSettings */
-        $activeSettings = $this->settingsRepository->findActive();
+        $sitePackageKey = $targetPackageKey ?: $this->requestService->getCurrentSitePackageKey();
 
-        if (!$activeSettings) {
-            $activeSettings = new Settings();
+        if (($settings = $this->settingsRepository->findByIdentifier('')) !== null) {
+            // needed to migrate from Settings without packageKey
+            ObjectAccess::setProperty($settings, 'packageKey', $sitePackageKey, true);
+            $this->settingsRepository->update($settings);
+            $this->persistenceManager->whitelistObject($settings);
+        } elseif (($settings = $this->settingsRepository->findByIdentifier($sitePackageKey)) === null) {
+            $settings = new Settings($sitePackageKey);
+            $this->settingsRepository->add($settings);
+            $this->persistenceManager->whitelistObject($settings);
         }
 
-        $themeSettings = $this->buildService->buildThemeSettings();
+        $themeSettings = $this->buildService->buildThemeSettings($settings->getPackageKey());
 
         $fonts = $this->buildService->buildFontOptions();
 
         $this->view->assignMultiple([
-            'settings' => $activeSettings,
-            'themeSettings' => $themeSettings,
+            'availableSitePackages' => $this->getAvailableSitePackageKeys(),
+            'settings' => $settings,
+            'themeSettings' => $themeSettings['presetVariables'],
             'fonts' => $fonts
         ]);
     }
@@ -101,4 +131,15 @@ class BackendController extends ActionController
         $this->redirect('index');
     }
 
+    /**
+     * Returns an array of all available site packages.
+     *
+     * @return array
+     */
+    protected function getAvailableSitePackageKeys(): array
+    {
+        $availableSitePackages = $this->packageManager->getFilteredPackages('available', 'Sites', 'neos-site');
+
+        return array_combine(array_keys($availableSitePackages), array_keys($availableSitePackages));
+    }
 }

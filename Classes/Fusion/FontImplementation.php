@@ -14,12 +14,19 @@ namespace CM\Neos\ThemeModule\Fusion;
 use CM\Neos\ThemeModule\Domain\Model\Font;
 use CM\Neos\ThemeModule\Service\Build;
 use CM\Neos\ThemeModule\Service\Compile;
+use CM\Neos\ThemeModule\Service\Request;
 use Neos\Flow\Annotations as Flow;
 use Neos\Fusion\FusionObjects\AbstractFusionObject;
 
 class FontImplementation extends AbstractFusionObject
 {
     const GOOGLE_WEBFONT_API = '//fonts.googleapis.com/css';
+
+    /**
+     * @Flow\Inject
+     * @var Request
+     */
+    protected $requestService;
 
     /**
      * @Flow\Inject
@@ -40,7 +47,7 @@ class FontImplementation extends AbstractFusionObject
      */
     public function evaluate()
     {
-        $settings = $this->buildService->buildThemeSettings();
+        $settings = $this->buildService->buildThemeSettings($this->requestService->getCurrentSitePackageKey());
 
         if (isset($settings['font']['type']['font']) && is_array($settings['font']['type']['font']) && count($settings['font']['type']['font']) > 0) {
             $fontSettings = $settings['font']['type']['font'];

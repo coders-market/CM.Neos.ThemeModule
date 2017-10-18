@@ -83,21 +83,21 @@ class Compile
         }
 
         try {
+            $themeSettings = $this->buildService->buildThemeSettings($settings->getPackageKey());
 
             // get absolute path to scss folder
-            $pathParts = Functions::parse_url($this->configuration['scss']['importPaths']);
-            $scssAbsolutePath = FLOW_PATH_ROOT . 'Packages/Sites/' . $pathParts['host'] . '/Resources' . $pathParts['path'];
-            $scssAbsolutePath = FileUtility::getUnixStylePath($scssAbsolutePath);
+            $pathParts = Functions::parse_url($themeSettings['importPaths']);
+            $scssAbsolutePath = FileUtility::concatenatePaths([FLOW_PATH_ROOT, 'Packages/Sites/', $pathParts['host'], '/Resources', $pathParts['path']]);
 
             $scss = new Compiler();
             $scss->setImportPaths($scssAbsolutePath);
 
-            $scss->setFormatter($this->configuration['scss']['formatter']);
+            $scss->setFormatter($themeSettings['formatter']);
             $scss->setVariables($scssVariables);
 
             $mainScssFileAndPath = FileUtility::concatenatePaths([
-                $this->configuration['scss']['importPaths'],
-                $this->configuration['scss']['mainScssFile']
+                $themeSettings['importPaths'],
+                $themeSettings['mainScssFile']
             ]);
 
             $mainScssContent .= FileUtility::getFileContents($mainScssFileAndPath);
@@ -122,8 +122,11 @@ class Compile
                 $compiledCss = $compiledCss . "\n" . $settings->getCustomCss();
             }
 
-            FileUtility::writeStaticFile($this->configuration['scss']['outputPath'],
-                $this->configuration['scss']['outputFilename'], $compiledCss);
+            FileUtility::writeStaticFile(
+                $themeSettings['outputPath'],
+                $themeSettings['outputFilename'],
+                $compiledCss
+            );
 
             $this->systemLogger->log('Scss successfully compiled');
         } catch (\Exception $e) {

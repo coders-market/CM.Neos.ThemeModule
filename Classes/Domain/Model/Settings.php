@@ -22,6 +22,14 @@ use Neos\Flow\Annotations as Flow;
 class Settings
 {
     /**
+     * @ORM\Id
+     * @Flow\Identity
+     * @ORM\Column(type="string", options={"default": ""})
+     * @var string
+     */
+    protected $packageKey;
+
+    /**
      * @ORM\Column(type="text")
      * @var string
      */
@@ -38,6 +46,24 @@ class Settings
      * @var string
      */
     protected $customSettings = '[]';
+
+    /**
+     * Settings constructor.
+     *
+     * @param string $packageKey
+     */
+    public function __construct($packageKey)
+    {
+        $this->packageKey = $packageKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPackageKey()
+    {
+        return $this->packageKey;
+    }
 
     /**
      * @return string

@@ -4,8 +4,11 @@
 <div class="neos-content neos-container-fluid">
 
 	<div class="container-fluid">
-		<div class="row">
+		<div class="row" style="padding-bottom: 1em; border-bottom: 1px solid #3f3f3f; margin-bottom: 1em;">
 			<h1>{neos:backend.translate(id: 'headline', package: 'CM.Neos.ThemeModule')}</h1>
+			<f:form action="index" method="get" class="neos-button-secondary">
+			<p>{neos:backend.translate(id: 'select.targetPackage.label', package: 'CM.Neos.ThemeModule')}: <f:form.select id="targetPackageKeySelector" name="targetPackageKey" options="{availableSitePackages}" value="{settings.packageKey}"/></p>
+			</f:form>
 		</div>
 		<f:form action="update" method="post" class="neos-button-primary" object="{settings}" name="settings">
 

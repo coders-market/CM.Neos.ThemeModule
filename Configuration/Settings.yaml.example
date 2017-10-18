@@ -103,13 +103,13 @@ CM:
 
 
       scss:
-        importPaths: 'resource://Vendor.Site.Package/Private/Styles/'
+        importPaths: 'resource://{packageKey}/Private/Styles/'
         # Contains all scss rules and @imports to other files
         mainScssFile: 'Main.scss'
         # Expanded, Nested (default), Compressed, Compact, Crunched
         formatter: 'Leafo\ScssPhp\Formatter\Nested'
         # Output path has to be in Package Public folder
-        outputPath: 'resource://Vendor.Site.Package/Public/Styles/'
+        outputPath: 'resource://{packageKey}/Public/Styles/'
         outputFilename: 'Main.css'
 
         # Define your default scss variable value
