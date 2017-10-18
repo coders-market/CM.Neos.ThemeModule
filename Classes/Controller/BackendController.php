@@ -128,7 +128,7 @@ class BackendController extends ActionController
         $this->contentCache->flushByTag('NodeType_Neos.NodeTypes:Page');
         $this->contentCache->flushByTag('NodeType_Neos.Neos:Document');
 
-        $this->redirect('index');
+        $this->redirect('index', 'Backend', 'CM.Neos.ThemeModule', ['targetPackageKey' => $settings->getPackageKey()]);
     }
 
     /**
