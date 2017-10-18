@@ -13,13 +13,14 @@ This packages allows you to customize your theme package in a backend module.
 * Additional ViewHelper
 * Support for Google Webfonts
 * Add any font (local, CDN, Google Webfont)
+* Neos multi-site setups supported
 
 ![Theme Settings Screenshot 1](Documentation/Neos-Theme-Module.jpg)
 ![Theme Settings Screenshot 2](Documentation/Neos-Theme-Module2.jpg)
 
 ## Requirements / Limitations
 
-* This package is tested with Neos 3.0 and 3.1
+* This package is tested with Neos 3.0, 3.1 and 3.2
 * .sass style is not supported! .scss only!
 
 ## Getting Started
@@ -52,9 +53,27 @@ CM:
         outputFilename: 'Main.css'
 ```
 
+You can use `{packageKey}` in the `importPaths` and `outputPath` settings, it will be replaced by the current package key automatically. This is the default, so you might not even need to define them.
+
 **IMPORTANT:** All your SCSS code has to be below specified `importPaths`. Using relative paths in a scss `@import` to a folder outside the `importPaths` will fail.
 
 > Make sure you have added this package as a dependency to your site package. This defines the loading order, so that you can overwrite the settings of this package via your site package.
+
+If you have multiple sites in a single Neos setup, you can define site-specific settings as well:
+
+```
+CM:
+  Neos:
+    ThemeModule:
+      scss:
+        # your default settings here...
+
+      sites:
+        'Vendor.Other.Site':
+          # override file names for this package
+          mainScssFile: 'Application.scss'
+          outputFilename: 'app.css'
+```
 
 ### Defining a SCSS variable
 
