@@ -70,9 +70,10 @@ CM:
 
       sites:
         'Vendor.Other.Site':
-          # override file names for this package
-          mainScssFile: 'Application.scss'
-          outputFilename: 'app.css'
+          scss:
+            # override file names for this package
+            mainScssFile: 'Application.scss'
+            outputFilename: 'app.css'
 ```
 
 ### Defining a SCSS variable
@@ -204,6 +205,8 @@ There are four fontSource types:
 4) (**_FONT_SOURCE_GOOGLE_**) Is used for the build in Google Webfonts so you shouldn't need this fontSource
 
 Depending on the selected fontSource, the font gets added to your CSS via @font-face rule (FONT_SOURCE_LOCAL) or a <link> tag get added to your `prototype(Neos.Neos:Page)` in `head.cmfont` for types FONT_SOURCE_CDN and FONT_SOURCE_GOOGLE
+
+The fontOptions can be set per-site as well.
 
 **_Configuration for a FONT_SOURCE_SYSTEM:_**
 

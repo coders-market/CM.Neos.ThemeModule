@@ -47,15 +47,16 @@ class FontImplementation extends AbstractFusionObject
      */
     public function evaluate()
     {
-        $settings = $this->buildService->buildThemeSettings($this->requestService->getCurrentSitePackageKey());
+        $currentSitePackageKey = $this->requestService->getCurrentSitePackageKey();
+        $presetVariables = $this->buildService->buildThemeSettings($currentSitePackageKey)['presetVariables'];
 
-        if (isset($settings['font']['type']['font']) && is_array($settings['font']['type']['font']) && count($settings['font']['type']['font']) > 0) {
-            $fontSettings = $settings['font']['type']['font'];
+        if (isset($presetVariables['font']['type']['font']) && is_array($presetVariables['font']['type']['font']) && count($presetVariables['font']['type']['font']) > 0) {
+            $fontSettings = $presetVariables['font']['type']['font'];
         } else {
             return null;
         }
 
-        $fonts = $this->buildService->buildFontOptions();
+        $fonts = $this->buildService->buildFontOptions($currentSitePackageKey);
 
         if (!isset($fonts) || !is_array($fonts) || count($fonts) === 0) {
             return null;
@@ -68,20 +69,23 @@ class FontImplementation extends AbstractFusionObject
                 continue;
             }
 
-            /** @var Font $font */
             $font = $this->compileService->findFontByName($fontSetting['value']['family'], $fonts);
-
-            if (!isset($font) || $font->getFontSource() == Font::FONT_SOURCE_SYSTEM || $font->getFontSource() == Font::FONT_SOURCE_LOCAL) {
+            if (!isset($font) || $font->getFontSource() === Font::FONT_SOURCE_SYSTEM || $font->getFontSource() === Font::FONT_SOURCE_LOCAL) {
                 continue;
             }
 
             // Check if at least one font variant is available
-            if (isset($fontSetting['value']['variants']) && is_string($fontSetting['value']['variants'])) {
-                $variantsArray = json_decode($fontSetting['value']['variants']);
+            $variantsArray = [];
+            if (isset($fontSetting['value']['variants'])) {
+                if (is_array($fontSetting['value']['variants'])) {
+                    $variantsArray = $fontSetting['value']['variants'];
+                } elseif (is_string($fontSetting['value']['variants'])) {
+                    // check: why would this ever be a string?
+                    $variantsArray = json_decode($fontSetting['value']['variants']);
+                }
             }
 
-            if (isset($variantsArray) && is_array($variantsArray) && count($variantsArray) > 0 && isset($font)) {
-
+            if ($variantsArray !== []) {
                 switch ($font) {
                     case ($font->getFontSource() === Font::FONT_SOURCE_GOOGLE):
                         $externalFonts['google'][$fontSetting['value']['family']]['settings'] = $fontSetting;

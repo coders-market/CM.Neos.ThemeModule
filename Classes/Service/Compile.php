@@ -56,7 +56,7 @@ class Compile
     {
         $scssVariables = [];
         $mainScssContent = '';
-        $fonts = $this->buildService->buildFontOptions();
+        $fonts = $this->buildService->buildFontOptions($settings->getPackageKey());
         $fontFaceCss = '';
 
         foreach ($settings->getCustomSettings() as $group) {

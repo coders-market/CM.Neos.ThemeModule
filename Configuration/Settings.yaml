@@ -32,7 +32,8 @@ CM:
       #
       # sites:
       #   'Acme.AcmeCom':
-      #     importPaths: '...'
+      #     fontOptions: ...
+      #     scss: ...
       #
       # The site-specific settings will be merged with the "scss" values, so those can be used to define common
       # default values.

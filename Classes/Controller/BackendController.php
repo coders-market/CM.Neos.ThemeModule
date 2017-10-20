@@ -90,7 +90,7 @@ class BackendController extends ActionController
 
         $themeSettings = $this->buildService->buildThemeSettings($settings->getPackageKey());
 
-        $fonts = $this->buildService->buildFontOptions();
+        $fonts = $this->buildService->buildFontOptions($settings->getPackageKey());
 
         $this->view->assignMultiple([
             'availableSitePackages' => $this->getAvailableSitePackageKeys(),

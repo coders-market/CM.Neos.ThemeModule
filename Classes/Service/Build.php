@@ -12,7 +12,6 @@ namespace CM\Neos\ThemeModule\Service;
  */
 
 use CM\Neos\ThemeModule\Domain\Model\Font;
-use CM\Neos\ThemeModule\Domain\Model\Settings;
 use CM\Neos\ThemeModule\Domain\Repository\SettingsRepository;
 use Neos\Cache\Frontend\VariableFrontend;
 use Neos\Flow\Annotations as Flow;
@@ -104,42 +103,46 @@ class Build
      * @param string $packageKey
      * @return array
      */
-    public function buildThemeSettings($packageKey)
+    public function buildThemeSettings($packageKey): array
     {
-        $globalConfiguration = $this->configuration['scss'];
-        $siteConfiguration = [];
+        $globalScssConfiguration = $this->configuration['scss'];
+        $siteScssConfiguration = [];
 
-        if (isset($this->configuration['sites'], $this->configuration['sites'][$packageKey])) {
-            $siteConfiguration = $this->configuration['sites'][$packageKey];
+        if (isset($this->configuration['sites'], $this->configuration['sites'][$packageKey], $this->configuration['sites'][$packageKey]['scss'])) {
+            $siteScssConfiguration = $this->configuration['sites'][$packageKey]['scss'];
         }
 
-        $mergedConfiguration = Arrays::arrayMergeRecursiveOverrule($globalConfiguration, $siteConfiguration);
+        $mergedScssConfiguration = Arrays::arrayMergeRecursiveOverrule($globalScssConfiguration, $siteScssConfiguration);
 
-        $mergedConfiguration['importPaths'] = str_replace('{packageKey}', $packageKey, $mergedConfiguration['importPaths']);
-        $mergedConfiguration['outputPath'] = str_replace('{packageKey}', $packageKey, $mergedConfiguration['outputPath']);
+        $mergedScssConfiguration['importPaths'] = str_replace('{packageKey}', $packageKey, $mergedScssConfiguration['importPaths']);
+        $mergedScssConfiguration['outputPath'] = str_replace('{packageKey}', $packageKey, $mergedScssConfiguration['outputPath']);
 
-        return $mergedConfiguration;
+        return $mergedScssConfiguration;
     }
 
     /**
      * Build the font array with select option list and array with font details like variants, subsets
      *
+     * @param string $packageKey
      * @return array
      */
-    public function buildFontOptions()
+    public function buildFontOptions($packageKey): array
     {
-        $settingsFont = [];
+        $globalFontOptions = $this->configuration['fontOptions'];
+        $siteFontOptions = [];
         $googleFonts = [];
 
-        if (count($this->configuration['fontOptions']) > 0) {
-            $settingsFont = $this->parseFonts($this->configuration['fontOptions']);
+        if (isset($this->configuration['sites'], $this->configuration['sites'][$packageKey], $this->configuration['sites'][$packageKey]['fontOptions'])) {
+            $siteFontOptions = $this->configuration['sites'][$packageKey]['fontOptions'];
         }
+
+        $mergedFontOptions = $this->parseFonts(Arrays::arrayMergeRecursiveOverrule($globalFontOptions, $siteFontOptions));
 
         if ($this->configuration['addGoogleFonts'] === true) {
             $googleFonts = $this->parseFonts($this->getGoogleWebfonts());
         }
 
-        return Arrays::arrayMergeRecursiveOverrule($settingsFont, $googleFonts);
+        return Arrays::arrayMergeRecursiveOverrule($mergedFontOptions, $googleFonts);
     }
 
     /**
@@ -147,7 +150,7 @@ class Build
      *
      * @return array
      */
-    protected function getGoogleWebfonts()
+    protected function getGoogleWebfonts(): array
     {
         if ($this->cacheFrontend->has(self::CACHE_IDENTIFIER)) {
             $cachedResponse = $this->cacheFrontend->get(self::CACHE_IDENTIFIER);
@@ -176,7 +179,7 @@ class Build
      * @param string $jsonFonts
      * @return array
      */
-    protected function getFontsArray($jsonFonts)
+    protected function getFontsArray($jsonFonts): array
     {
         $fontsArray = $this->arrayConverter->convertFrom($jsonFonts, 'array');
 
@@ -188,7 +191,7 @@ class Build
      *
      * @return string
      */
-    protected function getHost()
+    protected function getHost(): string
     {
         if ($this->baseUri) {
             return $this->baseUri;
@@ -213,13 +216,13 @@ class Build
      * @param $fontOptions array The defined fonts with all details
      * @return array
      */
-    public function parseFonts($fontOptions)
+    protected function parseFonts($fontOptions): array
     {
-        $font = [];
+        $fonts = [];
         if (isset($fontOptions['items'])) {
             foreach ($fontOptions['items'] as $fontItem) {
 
-                $font['options'][$fontItem['category']][] = new Font(
+                $fonts['options'][$fontItem['category']][] = new Font(
                     $fontItem['family'],
                     isset($fontItem['category']) ? $fontItem['category'] : '',
                     isset($fontItem['variants']) ? $fontItem['variants'] : [],
@@ -230,6 +233,6 @@ class Build
             }
         }
 
-        return $font;
+        return $fonts;
     }
 }
