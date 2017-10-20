@@ -1,18 +1,17 @@
 # Backend Site/Theme Module for Neos
 
 This packages allows you to customize your theme package in a backend module.
- 
-	
+
 ## Features
 
-* Full customizable, predefine any scss variables
-* Support for bootstrap, foundation and many more  
+* Fully customizable, predefine any SCSS variables
+* Support for bootstrap, foundation and many more
 * Change colors and fonts in the backend of Neos
-* Add custom additional scss/css code
+* Add custom additional SCSS/CSS code
 * Render your SCSS files
 * No dependencies to sass compiler libraries
-* Additonal Viewhelper
-* Support for google webfonts
+* Additional ViewHelper
+* Support for Google Webfonts
 * Add any font (local, CDN, Google Webfont)
 
 ![Theme Settings Screenshot 1](Documentation/Neos-Theme-Module.jpg)
@@ -23,23 +22,20 @@ This packages allows you to customize your theme package in a backend module.
 * This package is tested with Neos 3.0 and 3.1
 * .sass style is not supported! .scss only!
 
-
 ## Getting Started
 
-1) Add `"cm/neos-thememodule": "^3.0"` to your `composer.json` site package
-2) Run `composer update`
+1) Run `composer require --no-update cm/neos-thememodule` *in your site package*
+2) Run `composer update` *in your project*. If that does not install the package, because your site package is not managed via composer, you need to run the require from step 1 in your project root again.
 3) Run `./flow doctrine:migrate`
 
 Login to your Neos backend and open the `Theme Settings` in the backend menu
 
-Have a look in `CM.Neos.ThemeModule\Configuration\Settings.yaml.example` there are some defaults defined which you can easily override and/or extend to your needs
-
+Have a look at `CM.Neos.ThemeModule\Configuration\Settings.yaml.example` there are some defaults defined which you can easily override and/or extend to your needs.
 
 ### Adapt Settings.yaml to your needs
 
 In the Settings.yaml your have to declare the location of your scss code and your compiled css.
 
- 
 ```
 CM:
   Neos:
@@ -54,20 +50,20 @@ CM:
         # Output path has to be in Package Public folder
         outputPath: 'resource://Vendor.Site.Package/Public/Styles/'
         outputFilename: 'Main.css'
-``` 
+```
 
-**IMPORTANT:** All your scss code has to be below specified `importPaths` using relative paths in a scss `@import` to a 
-folder outside the `importPaths` will fail.
+**IMPORTANT:** All your SCSS code has to be below specified `importPaths`. Using relative paths in a scss `@import` to a folder outside the `importPaths` will fail.
 
-> Make sure you have added this package to your site package composer.json and your site package is part of the project composer.json, so that you can overwrite the Settings.yaml of this package via your Settings.yaml of your site package
+> Make sure you have added this package as a dependency to your site package. This defines the loading order, so that you can overwrite the settings of this package via your site package.
 
-### Defining a scss variable
+### Defining a SCSS variable
 
-You can define the scss variables which should be available on the backend module.
-To define define new variables add them to your `Settings.yaml`. Don't edit the `Settings.yaml` in this package as this
-break the possibility to update the package, as it would for any other package.
+You can define the SCSS variables which should be available on the backend module.
+
+To define define new variables add them to your `Settings.yaml`. Don't edit the `Settings.yaml` in this package as this breaks the possibility to update the package, as it would for any other package.
 
 Basic schema, for more details see `Configuration/Settings.yaml` and `Configuration/Settings.yaml.example`:
+
 ```
 CM:
   Neos:
@@ -87,7 +83,7 @@ CM:
                   scssVariableName: '$body-bg'
                   label: 'Background Color'
                 [...]
-                                                                          
+
           font:
             label: 'Your Font Settings'
             type:
@@ -109,7 +105,7 @@ CM:
                   fontFallbackValue: '"Times New Roman", Times, serif'
                   scssVariableName: '$font-family-serif'
                 [...]
-                                                  
+
               textfield:
                 fontSizeBase:
                   value: '14px'
@@ -120,32 +116,32 @@ CM:
                   scssVariableName: '$headings-font-weight'
                   label: 'Headings Font Weight'
                 [...]
-                                                                                                              
+
 ```
 
 **Attention:**
-In order to be able to override your defined scss variables in your scss file, the variable must have the value `!default`
+
+In order to be able to override your defined SCSS variables in your SCSS file, the variable must have the value `!default`.
 
 
 **Defining color:**
 
-To add an input form with an additional color picker add this and change it to your needs
+To add an input form with an additional color picker add this and change it to your needs:
 
 ```
 type:
   color: # Possible types are: color, font, textfield
     greyBase: # Name of your scss variable, can be any name if unique
       value: '#000000' # default value
-      scssVariableName: '$grey-base' # variable name in your scss file                  
+      scssVariableName: '$grey-base' # variable name in your scss file
       label: 'Grey Base' # The label which should be shown in the backend.
-          
+
 ```
 
 
 **Defining fonts:**
 
-
-To add a selectbox with fonts from Google Webfonts and other additional fonts add this and change it to your needs
+To add a selectbox with fonts from Google Webfonts and other additional fonts add this and change it to your needs:
 
 ```
 type:
@@ -155,7 +151,7 @@ type:
       category: 'serif' # Category to show only fonts of e.g. serif or monospace
       value: # predefined values
         # font family name, must be part of Google Webfonts or defined as font in fontOptions
-        family: 'Custom Font from CDN'         
+        family: 'Custom Font from CDN'
         # the font variant which should be choosen, "regular" for fontSource CDN and Local
         variants:
           - 'regular'
@@ -166,6 +162,7 @@ type:
 ```
 
 **Adding a font:**
+
 You can add additional fonts in your Settings.yaml to make them selectable in the backend.
 
 The path in your Settings.yaml to add new fonts:
@@ -181,13 +178,13 @@ CM:
 ```
 
 There are four fontSource types:
+
 1) **_FONT_SOURCE_SYSTEM_** Webfont which is usually on every device available like font "Arial"
 2) **_FONT_SOURCE_LOCAL_** A webfont which is available in the Public folder of your template
-3) **_FONT_SOURCE_CDN_** Use this for webfonts from other font distributors like font.com, linotype if the font get added via <link> tag in the head of your page
-4) (**_FONT_SOURCE_GOOGLE_**) Is used for the build in google webfonts so you shouldn't need this fontSource
+3) **_FONT_SOURCE_CDN_** Use this for webfonts from other font distributors like font.com, linotype if the font get added via `<link>` tag in the head of your page
+4) (**_FONT_SOURCE_GOOGLE_**) Is used for the build in Google Webfonts so you shouldn't need this fontSource
 
-Depending on the selected fontSource, the font get added to your CSS via @font-face rule (FONT_SOURCE_LOCAL) 
-or a <link> tag get added to your `prototype(Neos.Neos:Page)` in `head.cmfont` for types FONT_SOURCE_CDN and FONT_SOURCE_GOOGLE 
+Depending on the selected fontSource, the font gets added to your CSS via @font-face rule (FONT_SOURCE_LOCAL) or a <link> tag get added to your `prototype(Neos.Neos:Page)` in `head.cmfont` for types FONT_SOURCE_CDN and FONT_SOURCE_GOOGLE
 
 **_Configuration for a FONT_SOURCE_SYSTEM:_**
 
@@ -211,7 +208,7 @@ _**Configuration for a FONT_SOURCE_LOCAL:**_
       - 'regular'
       - '700'
       - '700italic'
-    files: # Define your paths for each font variant      
+    files: # Define your paths for each font variant
       regular:
         - 'resource://CM.Theme.PurpleHeart/Public/Fonts/my-font.ttf'
         - 'resource://CM.Theme.PurpleHeart/Public/Fonts/my-font.woff'
@@ -221,6 +218,7 @@ _**Configuration for a FONT_SOURCE_LOCAL:**_
 ```
 
 **_Configuration for a FONT_SOURCE_CDN:_**
+
 ```
   # Fonts from e.g. fonts.com, linotype, adobe, ... if they are using a <link> tag
   # to include the font on your page.
@@ -237,7 +235,7 @@ _**Configuration for a FONT_SOURCE_LOCAL:**_
 ```
 
 
-**Defining textbox:**
+**Defining a textbox:**
 
 To add a regular input form add this and change it to your needs
 
@@ -246,7 +244,7 @@ type:
   textfield: # Possible types are: color, font, textfield
     fontSize: # Name of your scss variable, can be any name if unique
       value: '16px' # default value
-      scssVariableName: '$font-size' # variable name in your scss file                  
+      scssVariableName: '$font-size' # variable name in your scss file
       label: 'Font Size' # The label which should be shown in the backend.
 ```
 
@@ -263,20 +261,17 @@ Add to your node property the validator like this:
         '../../CM.Neos.ThemeModule/JavaScript/Inspector/Validators/ColorValidator': []
 ```
 
-> Currently the there's a bug which makes it neccessary to add `../../` this issue is already reported. 
-See [github issue #1562](https://github.com/neos/neos-development-collection/issues/1562)
-
+> Currently the there's a bug which makes it neccessary to add `../../` this issue is already reported. See [github issue #1562](https://github.com/neos/neos-development-collection/issues/1562)
 
 **Valid values are:**
+
 * Hex: #fff or #ffffff
 * rgb: rgb(255,255,255)
 * rgba: rgba(255,255,255,0.3)
 
-
 ## Contributing
 
-I highly encourage everyone to provide PRs for missing functionality, improvements or bugfixes. 
-
+I highly encourage everyone to provide PRs for missing functionality, improvements or bugfixes.
 
 ## License
 
