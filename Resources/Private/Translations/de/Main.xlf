@@ -1,37 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file original="" product-name="CM.Neos.ThemeModule" source-language="en" datatype="plaintext">
+    <file original="" product-name="CM.Neos.ThemeModule" source-language="en" target-language="de" datatype="plaintext">
         <body>
             <trans-unit id="headline">
                 <source>Theme Settings</source>
+                <target>Theme-Optionen</target>
             </trans-unit>
             <trans-unit id="select.targetPackage.label">
                 <source>Target package</source>
+                <target>Ziel-Package</target>
             </trans-unit>
             <trans-unit id="button.save">
                 <source>Save Changes</source>
+                <target>Änderungen speichern</target>
             </trans-unit>
             <trans-unit id="select.font.label">
                 <source>Select your font</source>
+                <target>Schrift auswählen</target>
             </trans-unit>
             <trans-unit id="select.font.prependOptionLabel">
                 <source>Theme default selected</source>
+                <target>Standardwert aktiv</target>
             </trans-unit>
             <trans-unit id="select.font.fontFallbackValue">
                 <source>Font fallback</source>
+                <target>Ersatzschrift</target>
             </trans-unit>
             <trans-unit id="select.font.variants">
                 <source>Font variants</source>
+                <target>Schrift-Varianten</target>
             </trans-unit>
             <trans-unit id="select.font.subsets">
                 <source>Font subsets</source>
+                <target>Schriftschnitte</target>
             </trans-unit>
             <trans-unit id="textarea.scss.label">
                 <source>Your custom scss code to append: (Press Ctrl+Space for code completion)</source>
+                <target>Eigener SCCS-Code (wird angehängt): (Strg+Leertaste drücken für Code-Vervollständigung)</target>
             </trans-unit>
             <trans-unit id="textarea.css.label">
                 <source>Your custom css code to append: (Press Ctrl+Space for code completion)</source>
+                <target>Eigener CSS-Code (wird angehängt): (Strg+Leertaste drücken für Code-Vervollständigung)</target>
             </trans-unit>
+
         </body>
     </file>
 </xliff>

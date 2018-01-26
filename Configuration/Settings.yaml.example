@@ -5,7 +5,7 @@ CM:
       # Add google fonts - default true
       addGoogleFonts: false
 
-      # Fonts which are available
+      # Fonts which are available, can be set/overridden per site as well
       fontOptions:
         items:
           -
@@ -101,15 +101,15 @@ CM:
             files:
               regular: '//your.custom-font-cdn.tld/css?family=the+font+family'
 
-
+      # SCSS settings, can be set/overridden per site as well
       scss:
-        importPaths: 'resource://Vendor.Site.Package/Private/Styles/'
+        importPaths: 'resource://{packageKey}/Private/Styles/'
         # Contains all scss rules and @imports to other files
         mainScssFile: 'Main.scss'
         # Expanded, Nested (default), Compressed, Compact, Crunched
         formatter: 'Leafo\ScssPhp\Formatter\Nested'
         # Output path has to be in Package Public folder
-        outputPath: 'resource://Vendor.Site.Package/Public/Styles/'
+        outputPath: 'resource://{packageKey}/Public/Styles/'
         outputFilename: 'Main.css'
 
         # Define your default scss variable value
@@ -118,8 +118,8 @@ CM:
         # The following is based on Bootstrap 3.x adapt to your needs
 
         # Your scss variables which should be customizeable in the BE module
-         # Add/remove to your needs
-         # Valid types: textfield, color, font
+        # Add/remove to your needs
+        # Valid types: textfield, color, font
         presetVariables:
           color: # group
             label: 'Your Color Settings'

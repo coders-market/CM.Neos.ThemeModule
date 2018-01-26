@@ -52,6 +52,10 @@ if (!Array.prototype.includes) {
 
 $(document).ready(function () {
 
+    $('#targetPackageKeySelector').on('change', function () {
+        $(this).closest('form').submit();
+    });
+
     $('.custom-color').colorpicker();
 
     var myCodeMirrorScss = CodeMirror.fromTextArea(document.getElementById("code-scss"), {

@@ -1,19 +1,27 @@
 <?php
 namespace CM\Neos\ThemeModule\Service;
 
-use Leafo\ScssPhp\Compiler;
-use Neos\Utility\Unicode\Functions;
+/*
+ * This file is part of the CM.Neos.ThemeModule package.
+ *
+ * (c) 2017, Alexander Kappler
+ *
+ * This package is Open Source Software. For the full copyright and license
+ * information, please view the LICENSE file which was distributed with this
+ * source code.
+ */
+
 use CM\Neos\ThemeModule\Domain\Model\Font;
-use Neos\Flow\Annotations as Flow;
-use Neos\Flow\Log\SystemLoggerInterface;
 use CM\Neos\ThemeModule\Domain\Model\Settings;
 use CM\Neos\ThemeModule\FileUtility;
+use Leafo\ScssPhp\Compiler;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Log\SystemLoggerInterface;
 use Neos\Flow\ResourceManagement\ResourceManager;
-
+use Neos\Utility\Unicode\Functions;
 
 class Compile
 {
-
     /**
      * @Flow\Inject
      * @var SystemLoggerInterface
@@ -42,22 +50,21 @@ class Compile
      * Compile scss to css and add custom scss/css
      *
      * @param Settings $settings current settings
-     * @param array $customSettings current custom settings
+     * @return void
      */
-    public function compileScss(Settings $settings, $customSettings)
+    public function compileScss(Settings $settings)
     {
-
-        $scssVars = array();
+        $scssVariables = [];
         $mainScssContent = '';
-        $fonts = $this->buildService->buildFontOptions();
+        $fonts = $this->buildService->buildFontOptions($settings->getPackageKey());
         $fontFaceCss = '';
 
-        foreach ($customSettings as $group) {
+        foreach ($settings->getCustomSettings() as $group) {
             foreach ($group['type'] as $typeKey => $typeValue) {
                 foreach ($typeValue as $element) {
                     if ($typeKey === 'font') {
                         // Render font name for scss variable
-                        $scssVars[$element['scssVariableName']] = '"' . $element['value']['family'] . '", ' . $element['fontFallbackValue'];
+                        $scssVariables[$element['scssVariableName']] = '"' . $element['value']['family'] . '", ' . $element['fontFallbackValue'];
 
                         $font = $this->findFontByName($element['value']['family'], $fonts);
 
@@ -68,31 +75,30 @@ class Compile
                         if ($font->getFontSource() === Font::FONT_SOURCE_LOCAL && isset($variantsArray) && is_array($variantsArray) && count($variantsArray) > 0) {
                             $fontFaceCss .= $this->scssFontFace($font, $variantsArray);
                         }
-
                     } else {
-                        $scssVars[$element['scssVariableName']] = $element['value'];
+                        $scssVariables[$element['scssVariableName']] = $element['value'];
                     }
                 }
             }
         }
 
         try {
+            $themeSettings = $this->buildService->buildThemeSettings($settings->getPackageKey());
 
             // get absolute path to scss folder
-            $pathParts = Functions::parse_url($this->configuration['scss']['importPaths']);
-            $scssAbsolutePath = FLOW_PATH_ROOT . 'Packages/Sites/' . $pathParts['host'] . '/Resources' . $pathParts['path'];
-            $scssAbsolutePath = FileUtility::getUnixStylePath($scssAbsolutePath);
+            $pathParts = Functions::parse_url($themeSettings['importPaths']);
+            $scssAbsolutePath = FileUtility::concatenatePaths([FLOW_PATH_ROOT, 'Packages/Sites/', $pathParts['host'], '/Resources', $pathParts['path']]);
 
             $scss = new Compiler();
             $scss->setImportPaths($scssAbsolutePath);
 
-            $scss->setFormatter($this->configuration['scss']['formatter']);
-            $scss->setVariables($scssVars);
+            $scss->setFormatter($themeSettings['formatter']);
+            $scss->setVariables($scssVariables);
 
-            $mainScssFileAndPath = FileUtility::concatenatePaths(array(
-                $this->configuration['scss']['importPaths'],
-                $this->configuration['scss']['mainScssFile']
-            ));
+            $mainScssFileAndPath = FileUtility::concatenatePaths([
+                $themeSettings['importPaths'],
+                $themeSettings['mainScssFile']
+            ]);
 
             $mainScssContent .= FileUtility::getFileContents($mainScssFileAndPath);
 
@@ -116,32 +122,33 @@ class Compile
                 $compiledCss = $compiledCss . "\n" . $settings->getCustomCss();
             }
 
-            FileUtility::writeStaticFile($this->configuration['scss']['outputPath'],
-                $this->configuration['scss']['outputFilename'], $compiledCss);
+            FileUtility::writeStaticFile(
+                $themeSettings['outputPath'],
+                $themeSettings['outputFilename'],
+                $compiledCss
+            );
 
             $this->systemLogger->log('Scss successfully compiled');
-
         } catch (\Exception $e) {
-            $this->systemLogger->logException($e, array('message' => 'Compiling scss was not successful'));
+            $this->systemLogger->logException($e, ['message' => 'Compiling scss was not successful']);
         }
     }
 
     /**
      * Find font by given Name
      *
-     * @param string $fontfamily
+     * @param string $name
      * @param array $fonts
-     *
      * @return Font $font
      */
-    public function findFontByName($fontfamily, $fonts)
+    public function findFontByName($name, $fonts)
     {
         $font = null;
 
         foreach ($fonts['options'] as $categoryFonts) {
             /** @var Font $categoryFont */
             foreach ($categoryFonts as $categoryFont) {
-                if ($categoryFont->getFamily() === $fontfamily) {
+                if ($categoryFont->getFamily() === $name) {
                     return $categoryFont;
                 }
             }
@@ -155,12 +162,11 @@ class Compile
      *
      * @param Font $font The font to render a font-face
      * @param array $variants The font variants to render
-     *
      * @return string
      */
-    public function scssFontFace(Font $font, $variants)
+    protected function scssFontFace(Font $font, $variants)
     {
-        $fontface = '';
+        $fontFace = '';
 
         foreach ($variants as $variant) {
             $fontstyle = 'normal';
@@ -168,29 +174,29 @@ class Compile
             switch ($variant) {
                 case is_numeric($variant):
                     $fontweight = $variant;
-                    break;
+                break;
 
                 case $variant === 'regular':
                     $fontweight = 'normal';
-                    break;
+                break;
 
                 case (strpos($variant, 'italic') !== false):
                     $fontweight = substr($variant, 0, 3);
-                    $fontstyle = "italic";
-                    break;
+                    $fontstyle = 'italic';
+                break;
 
                 default:
                     $fontweight = 400;
             }
 
-            $fontface .= '@font-face {';
-            $fontface .= "font-family: '" . $font->getFamily() . "';";
-            $fontface .= "font-style: " . $fontstyle . ";";
-            $fontface .= "font-weight: " . $fontweight . ";";
-            $fontface .= "src: local('" . $font->getFamily() . "'),";
+            $fontFace .= '@font-face {';
+            $fontFace .= "font-family: '" . $font->getFamily() . "';";
+            $fontFace .= 'font-style: ' . $fontstyle . ';';
+            $fontFace .= 'font-weight: ' . $fontweight . ';';
+            $fontFace .= "src: local('" . $font->getFamily() . "'),";
 
             if (strpos($font->getFamily(), ' ') !== false) {
-                $fontface .= " local('" . str_replace(' ', '', $font->getFamily()) . "'),";
+                $fontFace .= " local('" . str_replace(' ', '', $font->getFamily()) . "'),";
             }
 
             foreach ($font->getFiles() as $fileKey => $file) {
@@ -200,24 +206,22 @@ class Compile
                         $i = 0;
                         foreach ($file as $source) {
                             if ($i > 0) {
-                                $fontface .= ',';
+                                $fontFace .= ',';
                             }
-                            $fontface .= "url(" . $this->resourceManager->getPublicPackageResourceUriByPath($source) . ") format('" . pathinfo($this->resourceManager->getPublicPackageResourceUriByPath($source),
+                            $fontFace .= "url(" . $this->resourceManager->getPublicPackageResourceUriByPath($source) . ") format('" . pathinfo($this->resourceManager->getPublicPackageResourceUriByPath($source),
                                     PATHINFO_EXTENSION) . "')";
                             $i++;
                         }
                     } else {
-                        $fontface .= "url(" . $this->resourceManager->getPublicPackageResourceUriByPath($file) . ") format('" . pathinfo($this->resourceManager->getPublicPackageResourceUriByPath($file),
+                        $fontFace .= "url(" . $this->resourceManager->getPublicPackageResourceUriByPath($file) . ") format('" . pathinfo($this->resourceManager->getPublicPackageResourceUriByPath($file),
                                 PATHINFO_EXTENSION) . "')";
                     }
                 }
-
             }
 
-            $fontface .= ";}\n";
+            $fontFace .= ";}\n";
         }
 
-        return $fontface;
+        return $fontFace;
     }
-
 }

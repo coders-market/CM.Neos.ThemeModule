@@ -1,20 +1,28 @@
 <?php
-
 namespace CM\Neos\ThemeModule\Service;
 
+/*
+ * This file is part of the CM.Neos.ThemeModule package.
+ *
+ * (c) 2017, Alexander Kappler
+ *
+ * This package is Open Source Software. For the full copyright and license
+ * information, please view the LICENSE file which was distributed with this
+ * source code.
+ */
+
 use CM\Neos\ThemeModule\Domain\Model\Font;
+use CM\Neos\ThemeModule\Domain\Repository\SettingsRepository;
 use Neos\Cache\Frontend\VariableFrontend;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Configuration\ConfigurationManager;
 use Neos\Flow\Http\Client\Browser;
 use Neos\Flow\Http\Client\CurlEngine;
-use CM\Neos\ThemeModule\Domain\Model\Settings;
-use CM\Neos\ThemeModule\Domain\Repository\SettingsRepository;
-
 use Neos\Flow\Property\TypeConverter\ArrayConverter;
 use Neos\Flow\ResourceManagement\ResourceManager;
-use Neos\Neos\Domain\Model\Site;
+use Neos\Neos\Domain\Repository\DomainRepository;
 use Neos\Neos\Domain\Repository\SiteRepository;
+use Neos\Utility\Arrays;
 
 class Build
 {
@@ -29,10 +37,22 @@ class Build
     protected $configuration;
 
     /**
+     * @Flow\InjectConfiguration(path="http.baseUri", package="Neos.Flow")
+     * @var string
+     */
+    protected $baseUri;
+
+    /**
      * @Flow\Inject
      * @var SettingsRepository
      */
     protected $settingsRepository;
+
+    /**
+     * @Flow\Inject
+     * @var DomainRepository
+     */
+    protected $domainRepository;
 
     /**
      * @Flow\Inject
@@ -76,65 +96,65 @@ class Build
      */
     protected $resourceManager;
 
-
     /**
      * Build Theme Settings based on Settings.yaml and custom values
+     * Merging scss with site-specific settings (if any).
      *
+     * @param string $packageKey
      * @return array
      */
-    public function buildThemeSettings()
+    public function buildThemeSettings($packageKey): array
     {
-        // Get all settings from yaml
-        $themeYamlSettings = $this->configuration['scss']['presetVariables'];
+        $globalScssConfiguration = $this->configuration['scss'];
+        $siteScssConfiguration = [];
 
-        /** @var Settings $dbSettings */
-        $dbSettings = $this->settingsRepository->findActive();
-
-        if (count($dbSettings) > 0 && $dbSettings->getCustomSettings()) {
-
-            $dbCustomSettings = json_decode($dbSettings->getCustomSettings(), true);
-            $themeArray = isset($themeYamlSettings) && is_array($themeYamlSettings)
-            && isset($dbCustomSettings) && is_array($dbCustomSettings)
-                ? array_replace_recursive($themeYamlSettings, $dbCustomSettings) : array();
-        } else {
-            $themeArray = isset($themeYamlSettings) && is_array($themeYamlSettings) ? $themeYamlSettings : array();
+        if (isset($this->configuration['sites'], $this->configuration['sites'][$packageKey], $this->configuration['sites'][$packageKey]['scss'])) {
+            $siteScssConfiguration = $this->configuration['sites'][$packageKey]['scss'];
         }
 
-        return $themeArray;
+        $mergedScssConfiguration = Arrays::arrayMergeRecursiveOverrule($globalScssConfiguration, $siteScssConfiguration);
+
+        $mergedScssConfiguration['importPaths'] = str_replace('{packageKey}', $packageKey, $mergedScssConfiguration['importPaths']);
+        $mergedScssConfiguration['outputPath'] = str_replace('{packageKey}', $packageKey, $mergedScssConfiguration['outputPath']);
+
+        return $mergedScssConfiguration;
     }
 
     /**
      * Build the font array with select option list and array with font details like variants, subsets
      *
+     * @param string $packageKey
      * @return array
      */
-    public function buildFontOptions()
+    public function buildFontOptions($packageKey): array
     {
-        $settingsFont = array();
-        $googleFonts = array();
+        $globalFontOptions = $this->configuration['fontOptions'];
+        $siteFontOptions = [];
+        $googleFonts = [];
 
-        if (isset($this->configuration['fontOptions']) && count($this->configuration['fontOptions']) > 0) {
-            $settingsFont = $this->parseFonts($this->configuration['fontOptions']);
+        if (isset($this->configuration['sites'], $this->configuration['sites'][$packageKey], $this->configuration['sites'][$packageKey]['fontOptions'])) {
+            $siteFontOptions = $this->configuration['sites'][$packageKey]['fontOptions'];
         }
 
-        if (!isset($this->configuration['addGoogleFonts']) || $this->configuration['addGoogleFonts'] === true) {
-            $googleFonts = $this->parseFonts($this->getGoogleWebfonts(), 'FONT_SOURCE_GOOGLE');
+        $mergedFontOptions = $this->parseFonts(Arrays::arrayMergeRecursiveOverrule($globalFontOptions, $siteFontOptions));
+
+        if ($this->configuration['addGoogleFonts'] === true) {
+            $googleFonts = $this->parseFonts($this->getGoogleWebfonts());
         }
 
-        return array_merge_recursive($settingsFont, $googleFonts);
+        return Arrays::arrayMergeRecursiveOverrule($mergedFontOptions, $googleFonts);
     }
-
 
     /**
      * Request for google webfonts, if cache is outdated, update cache
      *
      * @return array
      */
-    protected function getGoogleWebfonts()
+    protected function getGoogleWebfonts(): array
     {
-
         if ($this->cacheFrontend->has(self::CACHE_IDENTIFIER)) {
             $cachedResponse = $this->cacheFrontend->get(self::CACHE_IDENTIFIER);
+
             return $cachedResponse;
         } else {
             $requestUrl = self::GWF_SERVER . '?token=' . self::TOKEN;
@@ -145,51 +165,46 @@ class Build
             if ($response->getStatusCode() == 200) {
                 $fontsArray = json_decode($response->getContent(), true);
                 $this->cacheFrontend->set(self::CACHE_IDENTIFIER, $fontsArray);
-                return $fontsArray;
-            } else {
-                return array();
-            }
 
+                return $fontsArray;
+            }
         }
 
+        return [];
     }
 
     /**
      * Create array for f:form.select viewhelper options
      *
      * @param string $jsonFonts
-     *
      * @return array
      */
-    protected function getFontsArray($jsonFonts)
+    protected function getFontsArray($jsonFonts): array
     {
         $fontsArray = $this->arrayConverter->convertFrom($jsonFonts, 'array');
+
         return $fontsArray;
     }
-
 
     /**
      * Get domain of page
      *
      * @return string
      */
-    protected function getHost()
+    protected function getHost(): string
     {
-        $hostname = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
-
-        /** @var Site $site */
-        $site = $this->siteRepository->findFirstOnline();
-        if ($site) {
-            $activeDomains = $site->getActiveDomains();
-            foreach ($activeDomains as $activeDomain) {
-                $hostname = $activeDomain->getHostname();
-            }
+        if ($this->baseUri) {
+            return $this->baseUri;
         }
 
-        $baseUri = $this->configurationManager->getConfiguration('Settings', 'Neos.Flow.http.baseUri');
+        $hostname = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
 
-        if ($baseUri) {
-            $hostname = $baseUri;
+        $domain = $this->domainRepository->findOneByActiveRequest();
+        if ($domain === null) {
+            $site = $this->siteRepository->findDefault();
+            if ($site !== null) {
+                $hostname = $site->getPrimaryDomain()->getHostname();
+            }
         }
 
         return $hostname;
@@ -198,28 +213,26 @@ class Build
     /**
      * Parse the array to a valid output
      *
-     * @param $fontOptions    array    The defined fonts with all details
-     * @param $fontSource string    Force font source (optional) possible values: FONT_SOURCE_LOCAL, FONT_SOURCE_CDN, FONT_SOURCE_GOOGLE
-     *
+     * @param $fontOptions array The defined fonts with all details
      * @return array
      */
-    function parseFonts($fontOptions, $fontSource = '')
+    protected function parseFonts($fontOptions): array
     {
-        $font = array();
+        $fonts = [];
         if (isset($fontOptions['items'])) {
             foreach ($fontOptions['items'] as $fontItem) {
 
-                $font['options'][$fontItem['category']][] = new Font(
+                $fonts['options'][$fontItem['category']][] = new Font(
                     $fontItem['family'],
                     isset($fontItem['category']) ? $fontItem['category'] : '',
-                    isset($fontItem['variants']) ? $fontItem['variants'] : array(),
-                    isset($fontItem['subsets']) ? $fontItem['subsets'] : array(),
-                    isset($fontItem['files']) ? $fontItem['files'] : array(),
+                    isset($fontItem['variants']) ? $fontItem['variants'] : [],
+                    isset($fontItem['subsets']) ? $fontItem['subsets'] : [],
+                    isset($fontItem['files']) ? $fontItem['files'] : [],
                     isset($fontItem['fontSource']) ? $fontItem['fontSource'] : 'FONT_SOURCE_GOOGLE'
                 );
             }
         }
 
-        return $font;
+        return $fonts;
     }
 }

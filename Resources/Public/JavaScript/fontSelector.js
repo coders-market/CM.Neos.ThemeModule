@@ -49,16 +49,16 @@ $( document ).ready(function () {
 
                 var fontDetails = fonts[item.category].find(findFont),
                     checked = false,
-                    savedValueVariantsLenght = 0;
+                    savedValueVariantsLength = 0;
 
                 if (typeof item.variants !== 'undefined' && item.variants !== null) {
-                    savedValueVariantsLenght = item.variants.length;
+                    savedValueVariantsLength = item.variants.length;
                 }
 
                 // Render Variants
                 fontDetails.variants.forEach(function (element, index) {
 
-                    if (savedValueVariantsLenght > 0) {
+                    if (savedValueVariantsLength > 0) {
                         item.variants.includes(element) ? checked = true : checked = false;
                     }
                     htmlCheckboxesVariants += buildHtmlCheckbox(element, item.id, index, checked);

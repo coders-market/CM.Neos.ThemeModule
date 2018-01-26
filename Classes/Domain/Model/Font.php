@@ -1,6 +1,16 @@
 <?php
 namespace CM\Neos\ThemeModule\Domain\Model;
 
+/*
+ * This file is part of the CM.Neos.ThemeModule package.
+ *
+ * (c) 2017, Alexander Kappler
+ *
+ * This package is Open Source Software. For the full copyright and license
+ * information, please view the LICENSE file which was distributed with this
+ * source code.
+ */
+
 use Doctrine\ORM\Mapping as ORM;
 use Neos\Flow\Annotations as Flow;
 
@@ -18,47 +28,41 @@ final class Font
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="string")
      * @var string
      */
     public $family;
 
     /**
-     * @ORM\Column(type="string", nullable=true, options={"default":""})
      * @var string
      */
-    public $category;
+    public $category = '';
 
     /**
-     * @ORM\Column
      * @var string
      */
     public $fontSource = self::FONT_SOURCE_GOOGLE;
 
     /**
-     * @ORM\Column
      * @var array
      */
-    public $variants = array();
+    public $variants = [];
 
     /**
-     * @ORM\Column
      * @var array
      */
-    public $subsets = array();
+    public $subsets = [];
 
     /**
-     * @ORM\Column
      * @var array
      */
-    public $files = array();
+    public $files = [];
 
     public function __construct(
         $family,
         $category = '',
-        $variants = array(),
-        $subsets = array(),
-        $files = array(),
+        $variants = [],
+        $subsets = [],
+        $files = [],
         $fontSource = 'FONT_SOURCE_GOOGLE'
     ) {
         $this->family = $family;
@@ -116,5 +120,4 @@ final class Font
     {
         return $this->files;
     }
-
 }

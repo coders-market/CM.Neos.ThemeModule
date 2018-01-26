@@ -1,3 +1,44 @@
+CM:
+  Neos:
+    ThemeModule:
+      # Add google fonts
+      addGoogleFonts: true
+
+      # Fonts which are available
+      fontOptions: []
+
+      # Theme settings
+      #
+      # The {packageKey} placeholder is replaced by the package key of the site the module works on.
+      #
+      scss:
+        # Contains all scss rules and @imports to other files
+        importPaths: 'resource://{packageKey}/Private/Styles/'
+        mainScssFile: 'Main.scss'
+
+        # Expanded, Nested (default), Compressed, Compact, Crunched
+        formatter: 'Leafo\ScssPhp\Formatter\Nested'
+
+        # Output path has to be in Package Public folder
+        outputPath: 'resource://{packageKey}/Public/Styles/'
+        outputFilename: 'Main.css'
+
+        # Your scss variables which should be customizeable in the BE module
+        # Add/remove to your needs
+        # Valid types: textfield, color, font (See Settings.yaml.example or Readme.md of details)
+        presetVariables: []
+
+      # Optionally the settings can be placed below "sites", indexed by package key, if more flexibility is needed:
+      #
+      # sites:
+      #   'Acme.AcmeCom':
+      #     fontOptions: ...
+      #     scss: ...
+      #
+      # The site-specific settings will be merged with the "scss" values, so those can be used to define common
+      # default values.
+      sites: []
+
 Neos:
   Neos:
     modules:
@@ -47,27 +88,3 @@ Neos:
     fusion:
       autoInclude:
         CM.Neos.ThemeModule: true
-
-CM:
-  Neos:
-    ThemeModule:
-      scss:
-        importPaths: 'resource://Vendor.Site.Package/Private/Styles/'
-        # Contains all scss rules and @imports to other files
-        mainScssFile: 'Main.scss'
-        # Expanded, Nested (default), Compressed, Compact, Crunched
-        formatter: 'Leafo\ScssPhp\Formatter\Nested'
-        # Output path has to be in Package Public folder
-        outputPath: 'resource://Vendor.Site.Package/Public/Styles/'
-        outputFilename: 'Main.css'
-
-        # Define your default scss variable value
-        # You can add/remove values to this list
-        # The order: BE module values, Settings.yaml values, scss file defined value
-        # The following is based on Bootstrap 3.x adapt to your needs
-
-        # Your scss variables which should be customizeable in the BE module
-        # Add/remove to your needs
-        # Valid types: textfield, color, font (See Settings.yaml.example or Readme.md of details)
-        presetVariables:
-
