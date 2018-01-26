@@ -291,6 +291,11 @@ Add to your node property the validator like this:
 * rgb: rgb(255,255,255)
 * rgba: rgba(255,255,255,0.3)
 
+## THANK YOU for contributing to
+* @kdambekalns 
+* Schwabe AG, Muttenz, Switzerland
+* @Sebobo
+
 ## Contributing
 
 I highly encourage everyone to provide PRs for missing functionality, improvements or bugfixes.
