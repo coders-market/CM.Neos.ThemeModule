@@ -1,7 +1,7 @@
 {
     "name": "cm/neos-thememodule",
     "type": "neos-plugin",
-    "license": "GPL-3.0+",
+    "license": "GPL-3.0-or-later",
     "description": "Backend module to customize supported themes / site packages",
     "require": {
         "neos/neos": "~3.0",
