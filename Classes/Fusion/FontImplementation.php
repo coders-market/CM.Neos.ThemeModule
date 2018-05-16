@@ -12,6 +12,7 @@ namespace CM\Neos\ThemeModule\Fusion;
  */
 
 use CM\Neos\ThemeModule\Domain\Model\Font;
+use CM\Neos\ThemeModule\Domain\Repository\SettingsRepository;
 use CM\Neos\ThemeModule\Service\Build;
 use CM\Neos\ThemeModule\Service\Compile;
 use CM\Neos\ThemeModule\Service\Request;
@@ -27,6 +28,12 @@ class FontImplementation extends AbstractFusionObject
      * @var Request
      */
     protected $requestService;
+
+    /**
+     * @Flow\Inject
+     * @var SettingsRepository
+     */
+    protected $settingsRepository;
 
     /**
      * @Flow\Inject
@@ -48,8 +55,12 @@ class FontImplementation extends AbstractFusionObject
     public function evaluate()
     {
         $currentSitePackageKey = $this->requestService->getCurrentSitePackageKey();
-        $presetVariables = $this->buildService->buildThemeSettings($currentSitePackageKey)['presetVariables'];
+        $settings = $this->settingsRepository->findByIdentifier($currentSitePackageKey);
+        if ($settings === null) {
+            return null;
+        }
 
+        $presetVariables = $settings['presetVariables'];
         if (isset($presetVariables['font']['type']['font']) && is_array($presetVariables['font']['type']['font']) && count($presetVariables['font']['type']['font']) > 0) {
             $fontSettings = $presetVariables['font']['type']['font'];
         } else {

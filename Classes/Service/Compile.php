@@ -83,7 +83,7 @@ class Compile
         }
 
         try {
-            $themeSettings = $this->buildService->buildThemeSettings($settings->getPackageKey());
+            $themeSettings = $this->buildService->buildThemeSettings($settings);
 
             // get absolute path to scss folder
             $pathParts = Functions::parse_url($themeSettings['importPaths']);

@@ -88,7 +88,7 @@ class BackendController extends ActionController
             $this->persistenceManager->whitelistObject($settings);
         }
 
-        $themeSettings = $this->buildService->buildThemeSettings($settings->getPackageKey());
+        $themeSettings = $this->buildService->buildThemeSettings($settings);
 
         $fonts = $this->buildService->buildFontOptions($settings->getPackageKey());
 

@@ -12,6 +12,7 @@ namespace CM\Neos\ThemeModule\Service;
  */
 
 use CM\Neos\ThemeModule\Domain\Model\Font;
+use CM\Neos\ThemeModule\Domain\Model\Settings;
 use CM\Neos\ThemeModule\Domain\Repository\SettingsRepository;
 use Neos\Cache\Frontend\VariableFrontend;
 use Neos\Flow\Annotations as Flow;
@@ -100,11 +101,12 @@ class Build
      * Build Theme Settings based on Settings.yaml and custom values
      * Merging scss with site-specific settings (if any).
      *
-     * @param string $packageKey
+     * @param Settings $settings
      * @return array
      */
-    public function buildThemeSettings($packageKey): array
+    public function buildThemeSettings(Settings $settings): array
     {
+        $packageKey = $settings->getPackageKey();
         $globalScssConfiguration = $this->configuration['scss'];
         $siteScssConfiguration = [];
 
@@ -113,6 +115,7 @@ class Build
         }
 
         $mergedScssConfiguration = Arrays::arrayMergeRecursiveOverrule($globalScssConfiguration, $siteScssConfiguration);
+        $mergedScssConfiguration['presetVariables'] = Arrays::arrayMergeRecursiveOverrule($mergedScssConfiguration['presetVariables'], $settings->getCustomSettings());
 
         $mergedScssConfiguration['importPaths'] = str_replace('{packageKey}', $packageKey, $mergedScssConfiguration['importPaths']);
         $mergedScssConfiguration['outputPath'] = str_replace('{packageKey}', $packageKey, $mergedScssConfiguration['outputPath']);
