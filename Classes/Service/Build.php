@@ -203,7 +203,8 @@ class Build
         if ($domain === null) {
             $site = $this->siteRepository->findDefault();
             if ($site !== null) {
-                $hostname = $site->getPrimaryDomain()->getHostname();
+                $primaryDomain = $site->getPrimaryDomain();
+                $hostname = $primaryDomain ? $primaryDomain->getHostname() : '';
             }
         }
 
