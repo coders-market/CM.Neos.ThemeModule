@@ -24,6 +24,12 @@ class FontImplementation extends AbstractFusionObject
     const GOOGLE_WEBFONT_API = '//fonts.googleapis.com/css';
 
     /**
+     * @Flow\InjectConfiguration(package="CM.Neos.ThemeModule")
+     * @var array
+     */
+    protected $configuration;
+
+    /**
      * @Flow\Inject
      * @var Request
      */
@@ -54,19 +60,19 @@ class FontImplementation extends AbstractFusionObject
      */
     public function evaluate()
     {
-        $currentSitePackageKey = $this->requestService->getCurrentSitePackageKey();
-        $settings = $this->settingsRepository->findByIdentifier($currentSitePackageKey);
-        if ($settings === null) {
+        if ($this->configuration === null) {
             return null;
         }
 
-        $presetVariables = $settings['presetVariables'];
+        $presetVariables = $this->configuration['scss']['presetVariables'];
+
         if (isset($presetVariables['font']['type']['font']) && is_array($presetVariables['font']['type']['font']) && count($presetVariables['font']['type']['font']) > 0) {
             $fontSettings = $presetVariables['font']['type']['font'];
         } else {
             return null;
         }
 
+        $currentSitePackageKey = $this->requestService->getCurrentSitePackageKey();
         $fonts = $this->buildService->buildFontOptions($currentSitePackageKey);
 
         if (!isset($fonts) || !is_array($fonts) || count($fonts) === 0) {
